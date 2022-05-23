@@ -1,1 +1,7 @@
 src
+example
+node_modules
+yarn.lock
+yarn-error.log
+.github
+.parcel-cache
