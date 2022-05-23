@@ -4,6 +4,10 @@
   left: 50%;
   transform: translateX(-50%);
   transition: 300ms;
+  width: 80%;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
 }
 
 .container.interacting {
@@ -11,6 +15,7 @@
 }
 
 .text {
+  width: fit-content;
   color: white;
   background-color: rgba(0, 0, 0, 0.8);
   border-radius: 0.125rem;

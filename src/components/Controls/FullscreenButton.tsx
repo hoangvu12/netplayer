@@ -3,6 +3,7 @@ import { PLAYER_CONTAINER_CLASS } from '../../constants';
 import { useVideoProps } from '../../contexts/VideoPropsContext';
 import useHotKey, { parseHotKey } from '../../hooks/useHotKey';
 import { stringInterpolate } from '../../utils';
+import { isMobile } from '../../utils/device';
 import screenfull from '../../utils/screenfull';
 import FullscreenEnterIcon from '../icons/FullscreenEnterIcon';
 import FullscreenExitIcon from '../icons/FullscreenExitIcon';
@@ -16,7 +17,7 @@ const FullscreenButton = () => {
   const handleFullscreen = useCallback(() => {
     if (!screenfull.isEnabled) return;
 
-    const containerEl = document.querySelector(PLAYER_CONTAINER_CLASS);
+    const containerEl = document.querySelector(`.${PLAYER_CONTAINER_CLASS}`);
 
     if (!isFullscreen) {
       // @ts-ignore
@@ -30,10 +31,16 @@ const FullscreenButton = () => {
 
   useEffect(() => {
     const handleFullscreen = () => {
-      setIsFullscreen(!!document.fullscreenElement);
+      const isFullscreen = !!document.fullscreenElement;
+
+      if (isFullscreen && !isMobile) {
+        screen.orientation.lock('landscape');
+      }
+
+      setIsFullscreen(isFullscreen);
     };
 
-    const containerEl = document.querySelector(PLAYER_CONTAINER_CLASS);
+    const containerEl = document.querySelector(`.${PLAYER_CONTAINER_CLASS}`);
 
     containerEl?.addEventListener('fullscreenchange', handleFullscreen);
 

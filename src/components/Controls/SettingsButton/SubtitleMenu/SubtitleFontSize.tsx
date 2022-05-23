@@ -4,15 +4,7 @@ import { useSubtitleSettings } from '../../../../contexts/SubtitleSettingsContex
 import { useVideoProps } from '../../../../contexts/VideoPropsContext';
 import NestedMenu, { SubMenuProps } from '../../../NestedMenu/NestedMenu';
 
-const fontSizes = [
-  '0.5rem',
-  '0.75rem',
-  '1rem',
-  '1.5rem',
-  '2rem',
-  '3rem',
-  '4rem',
-];
+const fontSizes = [0.5, 0.75, 1, 1.5, 2, 3, 4];
 
 const SubtitleFontSize: React.FC<Partial<SubMenuProps>> = props => {
   const { state, setState } = useSubtitleSettings();
@@ -24,15 +16,15 @@ const SubtitleFontSize: React.FC<Partial<SubMenuProps>> = props => {
       menuKey="subtitle_font_size"
       title={i18n.settings.subtitleFontSize}
       onChange={value => {
-        setState(() => ({ fontSize: value }));
+        setState(() => ({ fontSize: Number(value) }));
       }}
-      activeItemKey={state.fontSize}
+      activeItemKey={state.fontSize.toString()}
     >
       {fontSizes.map(size => (
         <NestedMenu.Item
-          itemKey={size}
-          title={`${Number(size.replace('rem', '')) * 100}%`}
-          value={size}
+          itemKey={size.toString()}
+          title={`${size * 100}%`}
+          value={size.toString()}
           key={size}
         ></NestedMenu.Item>
       ))}

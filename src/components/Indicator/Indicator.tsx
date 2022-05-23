@@ -36,7 +36,7 @@ export const BaseIndicator = React.forwardRef<
   }));
 
   React.useLayoutEffect(() => {
-    const containerEl = document.querySelector(PLAYER_CONTAINER_CLASS);
+    const containerEl = document.querySelector('.' + PLAYER_CONTAINER_CLASS);
 
     if (!containerEl) return;
 

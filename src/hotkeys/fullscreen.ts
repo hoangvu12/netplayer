@@ -1,22 +1,22 @@
-import { PLAYER_CONTAINER_CLASS } from '../constants'
-import { HotKey } from '../types'
-import screenfull from '../utils/screenfull'
+import { PLAYER_CONTAINER_CLASS } from '../constants';
+import { HotKey } from '../types';
+import screenfull from '../utils/screenfull';
 
 const fullscreenHotKey = (hotKey: string | string[] = 'f'): HotKey => ({
   fn: () => {
-    if (!screenfull.isEnabled) return
+    if (!screenfull.isEnabled) return;
 
-    const containerEl = document.querySelector(PLAYER_CONTAINER_CLASS)
+    const containerEl = document.getElementsByClassName(PLAYER_CONTAINER_CLASS);
 
     if (!document.fullscreenElement) {
       // @ts-ignore
-      screenfull.request(containerEl)
+      screenfull.request(containerEl);
     } else {
-      screenfull.exit()
+      screenfull.exit();
     }
   },
   name: 'fullscreen',
-  hotKey: hotKey
-})
+  hotKey: hotKey,
+});
 
-export default fullscreenHotKey
+export default fullscreenHotKey;

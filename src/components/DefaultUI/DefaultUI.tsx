@@ -62,6 +62,8 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
     const handleDoubleTap: React.DOMAttributes<
       HTMLDivElement
     >['onTouchStart'] = React.useCallback(e => {
+      if (!videoRef.current) return;
+
       const { clientX } = e.changedTouches[0];
 
       const widthPercent = 45;
@@ -69,8 +71,10 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
 
       if (clientX < width) {
         backIndicatorRef?.current?.show();
+        videoRef.current.currentTime = videoRef.current.currentTime - 10;
       } else if (clientX > window.innerWidth - width) {
         forwardIndicatorRef?.current?.show();
+        videoRef.current.currentTime = videoRef.current.currentTime + 10;
       }
     }, []);
 

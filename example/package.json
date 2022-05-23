@@ -5,6 +5,7 @@
   "scripts": {
     "build": "parcel build ./src/index.html --public-url ./",
     "start": "parcel src/index.html",
+    "dev": "parcel src/index.html --no-cache",
     "prebuild-dev": "shx rm -rf dist/*",
     "build-dev": "parcel build ./src/index.html --no-optimize --public-url ./",
     "prebuild": "shx rm -rf dist/*",
