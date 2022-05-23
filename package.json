@@ -24,6 +24,7 @@
   },
   "peerDependencies": {
     "hls.js": "^1.1.5",
+    "react-dom": ">=16",
     "react": ">=16"
   },
   "husky": {
@@ -39,14 +40,14 @@
   },
   "name": "netplayer",
   "author": "hoangvu12",
-  "module": "dist/new-netplayer.esm.js",
+  "module": "dist/netplayer.esm.js",
   "size-limit": [
     {
-      "path": "dist/new-netplayer.cjs.production.min.js",
+      "path": "./dist/netplayer.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/new-netplayer.esm.js",
+      "path": "./dist/netplayer.esm.js",
       "limit": "10 KB"
     }
   ],
