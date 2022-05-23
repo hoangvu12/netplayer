@@ -1,0 +1,75 @@
+{
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "npm-run-all --parallel watch example",
+    "example": "cd example && yarn start",
+    "watch": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test --passWithNoTests",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "peerDependencies": {
+    "hls.js": "^1.1.5",
+    "react": ">=16"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "new-netplayer",
+  "author": "hoangvu12",
+  "module": "dist/new-netplayer.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/new-netplayer.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/new-netplayer.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^7.0.8",
+    "@types/react": "16.14.0",
+    "@types/react-dom": "16.9.16",
+    "autoprefixer": "^10.4.7",
+    "cssnano": "^5.1.9",
+    "hls.js": "^1.1.5",
+    "husky": "^8.0.1",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.14",
+    "react": "16.14.0",
+    "react-dom": "16.14.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "size-limit": "^7.0.8",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.6.4"
+  },
+  "dependencies": {
+    "@floating-ui/dom": "^0.5.0",
+    "@plussub/srt-vtt-parser": "^1.1.0",
+    "is-hotkey": "^0.2.0"
+  }
+}

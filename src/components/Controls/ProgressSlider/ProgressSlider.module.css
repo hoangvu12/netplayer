@@ -1,0 +1,65 @@
+.container {
+  width: 100%;
+  height: 5px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.container.desktop {
+  height: 16px;
+}
+
+.container:hover .innerContainer {
+  height: 5px;
+}
+
+.container:hover .dot {
+  display: block !important;
+}
+
+.container.desktop .dot {
+  display: none;
+}
+
+.innerContainer {
+  width: 100%;
+  height: 3px;
+  position: relative;
+}
+
+.dot {
+  width: 13px;
+  height: 13px;
+  position: absolute;
+  background-color: red;
+  border-radius: 9999px;
+}
+
+.playBar {
+  background-color: red;
+}
+
+.backgroundBar {
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 100%;
+}
+
+.bufferBar {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.hoverBar {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.hoverTime {
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 0.75rem;
+  transform: translateX(-50%);
+}

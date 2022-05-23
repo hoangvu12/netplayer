@@ -1,0 +1,37 @@
+.buttonContainer {
+  display: flex;
+  align-items: center;
+}
+
+.buttonContainer:hover .sliderContainer {
+  width: 4rem !important;
+}
+
+.buttonContainer:hover .dot {
+  opacity: 1;
+}
+
+.sliderContainer {
+  margin-left: 0.5rem;
+  width: 0 !important;
+  align-items: center;
+  display: flex;
+  transition: all 200ms;
+  transform-origin: left center;
+  height: 5px !important;
+  position: relative;
+}
+
+.backgroundBar {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.mainBar {
+  background-color: red;
+}
+
+.dot {
+  background-color: red;
+  transition: opacity 300ms;
+  opacity: 0;
+}

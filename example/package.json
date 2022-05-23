@@ -1,0 +1,35 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "parcel build ./src/index.html --public-url ./",
+    "start": "parcel src/index.html",
+    "prebuild-dev": "shx rm -rf dist/*",
+    "build-dev": "parcel build ./src/index.html --no-optimize --public-url ./",
+    "prebuild": "shx rm -rf dist/*",
+    "push-gh-pages": "push-dir --dir=dist --branch=gh-pages --cleanup --verbose"
+  },
+  "dependencies": {
+    "hls.js": "^1.1.5",
+    "react-app-polyfill": "^1.0.0",
+    "react-live": "^2.4.1"
+  },
+  "alias": {
+    "react": "../node_modules/react",
+    "react-dom": "../node_modules/react-dom/profiling",
+    "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
+  },
+  "devDependencies": {
+    "@types/react": "^16.9.11",
+    "@types/react-dom": "^16.8.4",
+    "autoprefixer": "^10.4.7",
+    "buffer": "^6.0.3",
+    "parcel": "^2.0.0",
+    "postcss": "^8.4.14",
+    "push-dir": "^0.4.1",
+    "shx": "^0.3.4",
+    "tailwindcss": "^3.0.24",
+    "typescript": "^3.4.5"
+  }
+}
