@@ -1,8 +1,6 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live';
-import editorTheme from 'prism-react-renderer/themes/nightOwl';
-import Player from '../../.';
+import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live'
+import editorTheme from 'prism-react-renderer/themes/nightOwl'
+import Player from 'netplayer'
 
 const initialCode = `
 <Player
@@ -32,7 +30,7 @@ const initialCode = `
   ]}
   className="object-contain w-full h-full"
 />
-`;
+`
 
 const App = () => {
   return (
@@ -42,22 +40,20 @@ const App = () => {
           className="relative w-full h-[56.25vw] bg-black"
           style={{ maxHeight: 'calc(100vh - 100px)' }}
         >
-          <div className="w-full h-full">
-            <LivePreview />
-          </div>
+          <LivePreview className="w-full h-full" />
         </div>
 
         <LiveEditor
           style={{
             fontFamily: '"Fira code", "Fira Mono", monospace',
-            fontSize: 16,
+            fontSize: 16
           }}
           className="bg-[#0B0E14]"
         />
         <LiveError />
       </LiveProvider>
     </div>
-  );
-};
+  )
+}
 
-ReactDOM.render(<App />, document.getElementById('root'));
+export default App

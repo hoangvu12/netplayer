@@ -1,18 +1,16 @@
 {
-  "name": "example",
-  "version": "1.0.0",
-  "license": "MIT",
+  "name": "netplayer-example",
+  "version": "0.0.0",
   "scripts": {
-    "build": "parcel build ./src/index.html --public-url ./",
-    "start": "parcel src/index.html",
-    "dev": "parcel src/index.html --no-cache",
-    "prebuild-dev": "shx rm -rf dist/*",
-    "build-dev": "parcel build ./src/index.html --no-optimize --public-url ./",
-    "prebuild": "shx rm -rf dist/*",
+    "dev": "vite",
+    "build": "tsc && vite build --base=./",
+    "serve": "vite preview --port 3000",
+    "lint": "eslint . --ext .ts,.tsx,.js",
     "push-gh-pages": "push-dir --dir=dist --branch=gh-pages --cleanup --verbose"
   },
   "dependencies": {
     "hls.js": "^1.1.5",
+    "netplayer": "link:../",
     "react-app-polyfill": "^1.0.0",
     "react-live": "^2.4.1"
   },
@@ -22,15 +20,31 @@
     "scheduler/tracing": "../node_modules/scheduler/tracing-profiling"
   },
   "devDependencies": {
+    "@commitlint/cli": "^15.0.0",
+    "@commitlint/config-conventional": "^15.0.0",
+    "@heroicons/react": "^1.0.5",
+    "@tailwindcss/forms": "^0.4.0",
+    "@types/jest": "^27.0.3",
+    "@types/node": "16",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.8.4",
-    "autoprefixer": "^10.4.7",
-    "buffer": "^6.0.3",
-    "parcel": "^2.0.0",
-    "postcss": "^8.4.14",
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/parser": "^5.8.0",
+    "@vitejs/plugin-react": "^1.1.3",
+    "autoprefixer": "^10.4.0",
+    "eslint": "^8.5.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-watch": "^8.0.0",
+    "husky": "^7.0.4",
+    "jest": "^27.4.5",
+    "postcss": "^8.4.5",
+    "prettier": "^2.5.1",
     "push-dir": "^0.4.1",
-    "shx": "^0.3.4",
-    "tailwindcss": "^3.0.24",
-    "typescript": "^3.4.5"
+    "tailwindcss": "^3.0.7",
+    "ts-jest": "^27.1.2",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.9"
   }
 }
