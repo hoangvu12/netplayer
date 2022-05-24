@@ -5,3 +5,9 @@ yarn.lock
 yarn-error.log
 .github
 .parcel-cache
+.*
+.*.json
+tsconfig.json
+tests
+coverage
+*.development.*

@@ -3,9 +3,6 @@
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "engines": {
     "node": ">=10"
   },
@@ -42,12 +39,8 @@
   "module": "dist/netplayer.esm.js",
   "size-limit": [
     {
-      "path": "./dist/netplayer.cjs.production.min.js",
-      "limit": "10 KB"
-    },
-    {
-      "path": "./dist/netplayer.esm.js",
-      "limit": "10 KB"
+      "path": "./dist/index.js",
+      "limit": "40 KB"
     }
   ],
   "devDependencies": {

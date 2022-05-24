@@ -52,4 +52,6 @@ const NetPlayer = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
   }
 );
 
+export * from './components';
+
 export default NetPlayer;
