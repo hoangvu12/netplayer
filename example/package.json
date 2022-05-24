@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "hls.js": "^1.1.5",
-    "react-app-polyfill": "^1.0.0",
-    "react-live": "^2.4.1",
     "netplayer": "link:../",
     "react": "link:../node_modules/react",
-    "react-dom": "link:../node_modules/react-dom/profiling"
+    "react-app-polyfill": "^1.0.0",
+    "react-dom": "link:../node_modules/react-dom/profiling",
+    "react-live": "^2.4.1"
   },
   "alias": {
     "react": "../node_modules/react",
@@ -32,7 +32,7 @@
     "@types/react-dom": "^16.8.4",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
-    "@vitejs/plugin-react": "^1.1.3",
+    "@vitejs/plugin-react": "^1.3.2",
     "autoprefixer": "^10.4.0",
     "eslint": "^8.5.0",
     "eslint-config-prettier": "^8.3.0",
