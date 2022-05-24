@@ -36,7 +36,11 @@ const initialCode = `
 const App: React.FC = () => {
   return (
     <div className="text-white w-full h-full gap-4">
-      <LiveProvider theme={editorTheme} scope={{ Player }} code={initialCode}>
+      <LiveProvider
+        theme={editorTheme}
+        scope={{ Player, React }}
+        code={initialCode}
+      >
         <div
           className="relative w-full h-[56.25vw] bg-black"
           style={{ maxHeight: 'calc(100vh - 100px)' }}
