@@ -1,3 +1,4 @@
+import React from 'react'
 import { LiveProvider, LiveEditor, LiveError, LivePreview } from 'react-live'
 import editorTheme from 'prism-react-renderer/themes/nightOwl'
 import Player from 'netplayer'
@@ -32,7 +33,7 @@ const initialCode = `
 />
 `
 
-const App = () => {
+const App: React.FC = () => {
   return (
     <div className="text-white w-full h-full gap-4">
       <LiveProvider theme={editorTheme} scope={{ Player }} code={initialCode}>

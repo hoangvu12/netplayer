@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "hls.js": "^1.1.5",
-    "netplayer": "link:../",
     "react-app-polyfill": "^1.0.0",
-    "react-live": "^2.4.1"
+    "react-live": "^2.4.1",
+    "netplayer": "link:../",
+    "react": "link:../node_modules/react",
+    "react-dom": "link:../node_modules/react-dom/profiling"
   },
   "alias": {
     "react": "../node_modules/react",
