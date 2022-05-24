@@ -6,8 +6,8 @@ import styles from './Subtitle.module.css';
 import { classNames } from '../../utils';
 import { useInteract } from '../../contexts/VideoInteractingContext';
 import { useSubtitleSettings } from '../../contexts/SubtitleSettingsContext';
-import { moderateScale } from '../../utils/scaling';
 import { isDesktop } from '../../utils/device';
+import useTextScaling from '../../hooks/useTextScaling';
 
 const textStyles = {
   none: '',
@@ -19,6 +19,7 @@ const BASE_FONT_SIZE = 16;
 const Subtitle = () => {
   const { state } = useVideoState();
   const { state: subtitleSettings } = useSubtitleSettings();
+  const { moderateScale } = useTextScaling();
   const { videoEl } = useVideo();
   const { isInteracting } = useInteract();
   const [currentText, setCurrentText] = useState<string>('');
