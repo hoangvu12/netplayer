@@ -65,8 +65,7 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "@plussub/srt-vtt-parser": "^1.1.0",
-    "is-hotkey": "^0.2.0"
+    "@plussub/srt-vtt-parser": "^1.1.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

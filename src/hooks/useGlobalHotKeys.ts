@@ -1,5 +1,4 @@
-// @ts-ignore
-import { isHotkey } from 'is-hotkey';
+import isHotkey from '../utils/hotkey';
 import { useEffect } from 'react';
 import { useVideoProps } from '../contexts/VideoPropsContext';
 
