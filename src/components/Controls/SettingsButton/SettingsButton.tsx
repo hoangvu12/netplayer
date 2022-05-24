@@ -56,8 +56,8 @@ const SettingsButton = () => {
               <SettingsIcon />
             </ControlButton>
           }
-          placement="top"
-          avoidOverflowSelector={selector}
+          position="top"
+          overflowElement={selector}
         >
           <Menu />
         </Popover>

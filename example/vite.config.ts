@@ -9,5 +9,10 @@ export default defineConfig({
   },
   build: {
     commonjsOptions: { exclude: ['netplayer'], include: [] }
+  },
+  server: {
+    watch: {
+      ignored: ['!**/node_modules/netplayer/**']
+    }
   }
 })

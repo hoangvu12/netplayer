@@ -2,6 +2,8 @@
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
   "include": ["src", "types"],
   "compilerOptions": {
+    "typeRoots": ["node_modules/@types"],
+    "types": ["node", "resize-observer-browser"],
     "module": "esnext",
     "lib": ["dom", "esnext"],
     "importHelpers": true,

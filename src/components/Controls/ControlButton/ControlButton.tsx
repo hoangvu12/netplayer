@@ -35,9 +35,9 @@ const ControlButton: React.FC<ControlButtonProps> = ({
         portalSelector={selector}
         reference={button}
         type="hover"
-        placement="top"
+        position="top"
         popperProps={{ className: styles.popper }}
-        avoidOverflowSelector={selector}
+        overflowElement={selector}
         {...tooltipProps}
       >
         <p style={{ backgroundColor: 'black', padding: '0.5rem' }}>{tooltip}</p>
