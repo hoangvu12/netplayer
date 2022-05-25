@@ -27,22 +27,19 @@ const MobileOverlay = () => {
           styles.inactive
       )}
     >
-      <p
+      <TextIcon
+        leftIcon={
+          <div className={styles.dragMessageIcon}>
+            <SliderIcon />
+          </div>
+        }
         className={classNames(
           styles.dragMessage,
           !videoState.seeking && styles.inactive
         )}
       >
-        <TextIcon
-          leftIcon={
-            <div className={styles.dragMessageIcon}>
-              <SliderIcon />
-            </div>
-          }
-        >
-          {i18n.controls.sliderDragMessage}
-        </TextIcon>
-      </p>
+        {i18n.controls.sliderDragMessage}
+      </TextIcon>
 
       <div
         className={classNames(
