@@ -1,160 +1,143 @@
-# TSDX React User Guide
+# netplayer
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+<a href='https://www.npmjs.com/package/netplayer'>
+  <img src='https://img.shields.io/npm/v/netplayer.svg' alt='Latest npm version'>
+</a>
 
-> This TSDX setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
+<p align='center'>
+  A simple React component that provide good looking UI video player
+</p>
 
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
-
-## Commands
-
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
-
-The recommended workflow is to run TSDX in one terminal:
+## Usage
 
 ```bash
-npm start # or yarn start
+npm install netplayer # or yarn add netplayer
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+```jsx
+import NetPlayer from 'netplayer';
 
-Then run the example inside another:
-
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+<NetPlayer
+  sources={[
+    {
+      file:
+        'https://www.googleapis.com/drive/v3/files/1Q6LsjpWgPoYIs6GaD8G6lNZRM2-VJXAY?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
+      label: '1080p',
+    },
+    {
+      file:
+        'https://www.googleapis.com/drive/v3/files/1sKXS6VU8uUGeW8WPKDp2dXxwAJ96Tk9c?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
+      label: '720p',
+    },
+  ]}
+  subtitles={[
+    {
+      lang: 'en',
+      language: 'English',
+      file:
+        'https://subtitles.netpop.app/subtitles/20211116/1637057950304_国王排名 2_英语.srt',
+    },
+    {
+      lang: 'vi',
+      language: 'Tiếng Việt',
+      file:
+        'https://subtitles.netpop.app/subtitles/20211116/1637057969656_国王排名 2_越南语.srt',
+    },
+  ]}
+/>;
 ```
 
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, we use [Parcel's aliasing](https://parceljs.org/module_resolution.html#aliases).
+Or [play](https://hoangvu12.github.io/netplayer/) around with this component
 
-To do a one-off build, use `npm run build` or `yarn build`.
+## Props
 
-To run tests, use `npm test` or `yarn test`.
+NetPlayer accepts video element props and these specific props
 
-## Configuration
+| Prop              | Type                                                                                                   | Description                                                 | Default                                                                                                         | Required |
+| ----------------- | ------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | -------- |
+| `sources`         | [Source](https://github.com/hoangvu12/netplayer/blob/main/src/types.ts#L1)[]                           | An array of sources contain `file` and `label`              | `null`                                                                                                          | `true`   |
+| `subtitles`       | [Subtitle](https://github.com/hoangvu12/netplayer/blob/main/src/types.ts#L6)[]                         | An array of subtitles contain `file`, `lang` and `language` | `null`                                                                                                          | `false`  |
+| `hlsRef`          | `React.MutableRefObject<Hls \| null>`                                                                  | `hls.js` instance ref                                       | `React.createRef()`                                                                                             | `false`  |
+| `hlsConfig`       | `Hls['config']`                                                                                        | `hls.js` config                                             | `{}`                                                                                                            | `false`  |
+| `changeSourceUrl` | `(currentSourceUrl: string, source: Source): string`                                                   | A function that modify given source url (`hls` only)        | `() => null`                                                                                                    | `false`  |
+| `onHlsInit`       | `(hls: Hls): void`                                                                                     | A function that called after hls.js initialization          | `() => null`                                                                                                    | `false`  |
+| `ref`             | `React.MutableRefObject<HTMLVideoElement \| null>`                                                     | `video` element ref                                         | `null`                                                                                                          | `false`  |
+| `i18n`            | [I18n](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L41)        | Translations                                                | [Default Translations](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L69) | `false`  |
+| `hotkeys`         | [Hotkey](https://github.com/hoangvu12/netplayer/blob/main/src/types.ts#L25)[]                          | Hotkeys (shortcuts)                                         | [Default Hotkeys](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L99)      | `false`  |
+| `components`      | [Component](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L99)[] | See [Customization](#customization)                         | [Default components](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L46)   | `false`  |
 
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
+## Customization
 
-### Jest
+You can customize the player by passing defined components with `components` props. See [defined components](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L46)
 
-Jest tests are set up to run with `npm test` or `yarn test`.
+By passing components, the passed components will override default existing components. Allow you to customize the player how you want it to be.
 
-### Bundle analysis
+### Example
 
-Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
+```jsx
+import NetPlayer, { TimeIndicator } from 'netplayer';
 
-#### Setup Files
+<NetPlayer
+  {...props}
+  components={{
+    Controls: () => {
+      return (
+        <div className="flex items-center justify-between">
+          <p>A custom Controls component</p>
 
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
+          <TimeIndicator />
+        </div>
+      );
+    },
+  }}
+/>;
 ```
 
-#### React Testing Library
+_Note: use built-in [hooks](https://github.com/hoangvu12/netplayer/tree/main/src/hooks) and [components](https://github.com/hoangvu12/netplayer/tree/main/src/components) for better customization_
 
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
+### Override structure
 
-### Rollup
+NetPlayer use this [default structure](https://github.com/hoangvu12/netplayer/blob/main/src/components/DefaultUI/DefaultUI.tsx)
 
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
+To override it, simply pass your own structure as NetPlayer's `children`
 
-### TypeScript
+```jsx
+import NetPlayer, { Controls, Player, Overlay } from 'netplayer';
 
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
+<NetPlayer {...props}>
+  <div>
+    <div>
+      <Player />
+    </div>
+    <div>
+      <Controls />
+    </div>
+    <div>
+      <Overlay />
+    </div>
+    <div>
+      <p>Look I'm over here!</p>
+    </div>
+  </div>
+</NetPlayer>;
 ```
 
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
+## Methods
 
-## Module Formats
+You can access to the `video` element by passing `ref` to NetPlayer and use all its methods.
 
-CJS, ESModules, and UMD module formats are supported.
+## Supported formats
 
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
+NetPlayer supports all `video` element supported formats and `HLS` format
 
-## Deploying the Example Playground
+## Contributing
 
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
+See the [contribution guidelines](github.com/hoangvu12/netplayer/blob/main/CONTRIBUTING.md) before creating a pull request.
 
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
-```
+## Other video players
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
-
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
-```
-
-## Named Exports
-
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
-
-## Including Styles
-
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+- [react-player](https://github.com/CookPete/react-player)
+- [react-tuby](https://github.com/napthedev/react-tuby)
+- [video-react](https://github.com/video-react/video-react)
+- [plyr](https://github.com/sampotts/plyr)
+- [video.js](https://github.com/videojs/video.js)

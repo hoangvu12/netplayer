@@ -7,9 +7,7 @@
     "node": ">=10"
   },
   "scripts": {
-    "start": "npm-run-all --parallel watch example",
-    "example": "cd example && yarn start",
-    "watch": "tsdx watch",
+    "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
     "lint": "tsdx lint",
