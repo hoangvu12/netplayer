@@ -9,7 +9,6 @@
     "push-gh-pages": "push-dir --dir=dist --branch=gh-pages --cleanup --verbose"
   },
   "dependencies": {
-    "hls.js": "^1.1.5",
     "netplayer": "link:../",
     "react": "link:../node_modules/react",
     "react-app-polyfill": "^1.0.0",
