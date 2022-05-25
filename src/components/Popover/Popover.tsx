@@ -27,7 +27,7 @@ const Popover: React.FC<PopoverProps> = ({
   const { floatingRef, referenceRef, update, strategy, x, y } = usePopover<
     HTMLDivElement,
     HTMLDivElement
-  >({ offset: 10, ...options });
+  >({ offset: 10, strategy: 'fixed', ...options });
 
   const { className: popperClassName = '', ...popperRest } = popperProps!;
   const {
