@@ -4,33 +4,33 @@ import editorTheme from 'prism-react-renderer/themes/nightOwl'
 import Player from 'netplayer'
 
 const initialCode = `
-<Player
-  sources={[
-    {
-      file:
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-      label: '1080p',
-    },
-    {
-      file:
-        'https://www.googleapis.com/drive/v3/files/1sKXS6VU8uUGeW8WPKDp2dXxwAJ96Tk9c?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
-      label: '720p',
-    },
-  ]}
-  subtitles={[
-    {
-      "lang": "en",
-      "language": "English",
-      "file": "https://subtitles.netpop.app/subtitles/20211116/1637057950304_国王排名 2_英语.srt",
-    },
-    {
-      "lang": "vi",
-      "language": "Tiếng Việt",
-      "file": "https://subtitles.netpop.app/subtitles/20211116/1637057969656_国王排名 2_越南语.srt",
-    }
-  ]}
-  className="object-contain w-full h-full"
-/>
+  <Player
+    sources={[
+      {
+        file:
+          'https://www.googleapis.com/drive/v3/files/1Q6LsjpWgPoYIs6GaD8G6lNZRM2-VJXAY?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
+        label: '1080p',
+      },
+      {
+        file:
+          'https://www.googleapis.com/drive/v3/files/1sKXS6VU8uUGeW8WPKDp2dXxwAJ96Tk9c?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
+        label: '720p',
+      },
+    ]}
+    subtitles={[
+      {
+        "lang": "en",
+        "language": "English",
+        "file": "https://subtitles.netpop.app/subtitles/20211116/1637057950304_国王排名 2_英语.srt",
+      },
+      {
+        "lang": "vi",
+        "language": "Tiếng Việt",
+        "file": "https://subtitles.netpop.app/subtitles/20211116/1637057969656_国王排名 2_越南语.srt",
+      }
+    ]}
+    className="object-contain w-full h-full"
+  />
 `
 
 const App: React.FC = () => {
