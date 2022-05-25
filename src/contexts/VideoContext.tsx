@@ -9,11 +9,13 @@ interface VideoState {
   volume: number;
   buffering: boolean;
   error: string | null;
+  seeking: boolean;
 }
 
 interface VideoContextProps {
   videoEl: HTMLVideoElement | null;
   videoState: VideoState;
+  setVideoState: (state: Partial<VideoState>) => void;
 }
 
 interface VideoContextProviderProps {
@@ -28,12 +30,14 @@ const defaultState: VideoState = {
   ended: false,
   paused: true,
   volume: 1,
+  seeking: false,
   error: '',
 };
 
 export const VideoContext = React.createContext<VideoContextProps>({
   videoEl: null,
   videoState: defaultState,
+  setVideoState: () => {},
 });
 
 export const VideoContextProvider: React.FC<VideoContextProviderProps> = ({
@@ -104,11 +108,12 @@ export const VideoContextProvider: React.FC<VideoContextProviderProps> = ({
         duration: videoEl.duration,
         buffering: false,
         error: null,
+        paused: false,
       });
     };
 
     const handleEnded = () => {
-      updateState({ ended: true });
+      updateState({ ended: true, paused: true });
     };
 
     const handleVolumeChange = () => {
@@ -118,6 +123,7 @@ export const VideoContextProvider: React.FC<VideoContextProviderProps> = ({
     videoEl.addEventListener('waiting', handleWaiting);
     videoEl.addEventListener('loadeddata', handleloadeddata);
     videoEl.addEventListener('play', handlePlay);
+    videoEl.addEventListener('playing', handlePlay);
     videoEl.addEventListener('pause', handlePause);
     videoEl.addEventListener('timeupdate', handleTimeupdate);
     videoEl.addEventListener('ended', handleEnded);
@@ -128,6 +134,7 @@ export const VideoContextProvider: React.FC<VideoContextProviderProps> = ({
       videoEl.removeEventListener('waiting', handleWaiting);
       videoEl.removeEventListener('loadeddata', handleloadeddata);
       videoEl.removeEventListener('play', handlePlay);
+      videoEl.removeEventListener('playing', handlePlay);
       videoEl.removeEventListener('pause', handlePause);
       videoEl.removeEventListener('timeupdate', handleTimeupdate);
       videoEl.removeEventListener('ended', handleEnded);
@@ -147,7 +154,9 @@ export const VideoContextProvider: React.FC<VideoContextProviderProps> = ({
   }, [hls]);
 
   return (
-    <VideoContext.Provider value={{ videoEl, videoState }}>
+    <VideoContext.Provider
+      value={{ videoEl, videoState, setVideoState: updateState }}
+    >
       {children}
     </VideoContext.Provider>
   );

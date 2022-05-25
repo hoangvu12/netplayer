@@ -1,15 +1,19 @@
 import * as React from 'react';
 import { useVideo } from '../../contexts/VideoContext';
 import { useInteract } from '../../contexts/VideoInteractingContext';
+import { useVideoProps } from '../../contexts/VideoPropsContext';
 import { classNames } from '../../utils';
 import BackwardButton from '../Controls/BackwardButton';
 import ForwardButton from '../Controls/ForwardButton';
 import PlayPauseButton from '../Controls/PlayPauseButton';
 import SettingsButton from '../Controls/SettingsButton';
+import SliderIcon from '../icons/SliderIcon';
+import TextIcon from '../TextIcon';
 import styles from './MobileOverlay.module.css';
 
 const MobileOverlay = () => {
   const { isInteracting } = useInteract();
+  const { i18n } = useVideoProps();
   const { videoState } = useVideo();
 
   return (
@@ -17,27 +21,54 @@ const MobileOverlay = () => {
       className={classNames(
         'mobile-overlay',
         styles.overlayContainer,
-        !isInteracting && !videoState.buffering && styles.inactive
+        !isInteracting &&
+          !videoState.seeking &&
+          !videoState.buffering &&
+          styles.inactive
       )}
     >
-      <div className={styles.playerControlsContainer}>
-        <div className={styles.playerControlsInnerContainer}>
-          <div className={styles.backwardButton}>
-            <BackwardButton />
-          </div>
+      <p
+        className={classNames(
+          styles.dragMessage,
+          !videoState.seeking && styles.inactive
+        )}
+      >
+        <TextIcon
+          leftIcon={
+            <div className={styles.dragMessageIcon}>
+              <SliderIcon />
+            </div>
+          }
+        >
+          {i18n.controls.sliderDragMessage}
+        </TextIcon>
+      </p>
 
-          <div className={styles.playButton}>
-            <PlayPauseButton />
-          </div>
+      <div
+        className={classNames(
+          styles.uiContainer,
+          videoState.seeking && styles.inactive
+        )}
+      >
+        <div className={styles.playerControlsContainer}>
+          <div className={styles.playerControlsInnerContainer}>
+            <div className={styles.backwardButton}>
+              <BackwardButton />
+            </div>
 
-          <div className={styles.forwardButton}>
-            <ForwardButton />
+            <div className={styles.playButton}>
+              <PlayPauseButton />
+            </div>
+
+            <div className={styles.forwardButton}>
+              <ForwardButton />
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className={styles.settingsButton}>
-        <SettingsButton />
+        <div className={styles.settingsButton}>
+          <SettingsButton />
+        </div>
       </div>
     </div>
   );

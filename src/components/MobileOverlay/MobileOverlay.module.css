@@ -5,9 +5,41 @@
   visibility: visible;
   opacity: 1;
   transition: visibility 300ms, opacity 300ms;
+  position: relative;
 }
 
 .overlayContainer.inactive {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlayContainer.inactive * {
+  pointer-events: none;
+}
+
+.uiContainer {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 300ms, opacity 300ms;
+}
+
+.dragMessage {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 1rem;
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 300ms, opacity 300ms;
+}
+
+.dragMessageIcon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.inactive {
   visibility: hidden;
   opacity: 0;
 }
@@ -20,6 +52,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 }
 
 .playerControlsInnerContainer {
@@ -27,6 +60,11 @@
   display: flex;
   align-items: center;
   justify-content: space-evenly;
+  pointer-events: none;
+}
+
+.playerControlsInnerContainer > * {
+  pointer-events: auto;
 }
 
 :global(.control-button) {
@@ -39,8 +77,8 @@
 }
 
 .playButton {
-  width: 3.2rem;
-  height: 3.2rem;
+  width: 4rem;
+  height: 4rem;
 }
 
 .forwardButton {

@@ -21,6 +21,7 @@ interface I18nControls {
   exitFullscreen: string;
   muteVolume: string;
   unmuteVolume: string;
+  sliderDragMessage: string;
 }
 
 interface I18nSettings {
@@ -78,6 +79,7 @@ const defaultI18n: I18n = {
     exitFullscreen: 'Exit fullscreen ({{shortcut}})',
     muteVolume: 'Mute ({{shortcut}})',
     unmuteVolume: 'Unmute ({{shortcut}})',
+    sliderDragMessage: 'Drag to seek video',
   },
   settings: {
     playbackSpeed: 'Playback speed',

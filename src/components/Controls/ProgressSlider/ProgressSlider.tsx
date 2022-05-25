@@ -1,86 +1,96 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useVideo } from '../../../contexts/VideoContext'
-import { classNames, convertTime } from '../../../utils'
-import { isDesktop } from '../../../utils/device'
-import Slider from '../../Slider'
-import styles from './ProgressSlider.module.css'
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useVideo } from '../../../contexts/VideoContext';
+import { classNames, convertTime } from '../../../utils';
+import { isDesktop } from '../../../utils/device';
+import Slider from '../../Slider';
+import styles from './ProgressSlider.module.css';
 
 const ProgressSlider = () => {
-  const { videoEl } = useVideo()
-  const [bufferPercent, setBufferPercent] = useState(0)
-  const [hoverPercent, setHoverPercent] = useState(0)
-  const [currentTime, setCurrentTime] = useState(0)
+  const { videoEl, setVideoState } = useVideo();
+  const [bufferPercent, setBufferPercent] = useState(0);
+  const [hoverPercent, setHoverPercent] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
 
   // https://stackoverflow.com/questions/5029519/html5-video-percentage-loaded
   useEffect(() => {
-    if (!videoEl) return
+    if (!videoEl) return;
 
     const handleProgressBuffer = () => {
-      const buffer = videoEl.buffered
+      const buffer = videoEl.buffered;
 
-      if (!buffer.length) return
-      if (!videoEl.duration) return
+      if (!buffer.length) return;
+      if (!videoEl.duration) return;
 
-      const bufferedTime = buffer.end(buffer.length - 1)
-      const bufferedPercent = (bufferedTime / videoEl.duration) * 100
+      const bufferedTime = buffer.end(buffer.length - 1);
+      const bufferedPercent = (bufferedTime / videoEl.duration) * 100;
 
-      setBufferPercent(bufferedPercent)
-    }
+      setBufferPercent(bufferedPercent);
+    };
 
     const handleTimeUpdate = () => {
-      setCurrentTime(videoEl.currentTime)
-    }
+      setCurrentTime(videoEl.currentTime);
+    };
 
-    videoEl.addEventListener('progress', handleProgressBuffer)
-    videoEl.addEventListener('timeupdate', handleTimeUpdate)
+    videoEl.addEventListener('progress', handleProgressBuffer);
+    videoEl.addEventListener('timeupdate', handleTimeUpdate);
 
     return () => {
-      videoEl.removeEventListener('progress', handleProgressBuffer)
-      videoEl.removeEventListener('timeupdate', handleTimeUpdate)
-    }
-  }, [videoEl])
+      videoEl.removeEventListener('progress', handleProgressBuffer);
+      videoEl.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, [videoEl]);
 
   const currentPercent = useMemo(() => {
-    if (!videoEl?.duration) return 0
+    if (!videoEl?.duration) return 0;
 
-    return (currentTime / videoEl.duration) * 100
-  }, [currentTime])
+    return (currentTime / videoEl.duration) * 100;
+  }, [currentTime]);
 
   const handlePercentIntent = useCallback((percent: number) => {
-    setHoverPercent(percent)
-  }, [])
+    setHoverPercent(percent);
+  }, []);
 
   const handlePercentChange = useCallback(
     (percent: number) => {
-      if (!videoEl?.duration) return
+      if (!videoEl?.duration) return;
 
-      const newTime = (percent / 100) * videoEl.duration
+      const newTime = (percent / 100) * videoEl.duration;
 
-      videoEl.currentTime = newTime
+      videoEl.currentTime = newTime;
 
       if (videoEl.paused) {
-        videoEl.play()
+        videoEl.play();
       }
 
-      setCurrentTime(newTime)
+      setVideoState({ seeking: false });
+      setCurrentTime(newTime);
     },
     [videoEl?.duration]
-  )
+  );
+
+  const handleDragStart = useCallback(() => {
+    setVideoState({ seeking: true });
+  }, []);
+
+  const handleDragEnd = useCallback(() => {
+    setVideoState({ seeking: true });
+  }, []);
 
   const handlePercentChanging = useCallback(
-    (percent) => {
-      if (!videoEl?.duration) return
+    percent => {
+      if (!videoEl?.duration) return;
 
       if (!videoEl.paused) {
-        videoEl.pause()
+        videoEl.pause();
       }
 
-      const newTime = (percent / 100) * videoEl.duration
+      const newTime = (percent / 100) * videoEl.duration;
 
-      setCurrentTime(newTime)
+      setVideoState({ seeking: true });
+      setCurrentTime(newTime);
     },
     [videoEl?.duration]
-  )
+  );
 
   return (
     <Slider
@@ -88,6 +98,8 @@ const ProgressSlider = () => {
       onPercentIntent={handlePercentIntent}
       onPercentChange={handlePercentChange}
       onPercentChanging={handlePercentChanging}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
     >
       <div className={styles.innerContainer}>
         <Slider.Bar className={styles.hoverBar} percent={hoverPercent} />
@@ -106,7 +118,7 @@ const ProgressSlider = () => {
         )}
       </div>
     </Slider>
-  )
-}
+  );
+};
 
-export default ProgressSlider
+export default ProgressSlider;

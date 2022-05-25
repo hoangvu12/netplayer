@@ -15,7 +15,10 @@ const MobileControls = () => {
     <div
       className={classNames(
         styles.container,
-        !isInteracting && !videoState.buffering && styles.inactive
+        !videoState.seeking &&
+          !isInteracting &&
+          !videoState.buffering &&
+          styles.inactive
       )}
     >
       <div className={styles.controlsContainer}>

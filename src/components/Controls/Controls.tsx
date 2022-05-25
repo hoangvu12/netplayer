@@ -22,7 +22,10 @@ const Controls = () => {
     <div
       className={classNames(
         styles.container,
-        !isInteracting && !videoState.buffering && styles.hide
+        !videoState.seeking &&
+          !isInteracting &&
+          !videoState.buffering &&
+          styles.hide
       )}
     >
       <div className={styles.sliderContainer}>
