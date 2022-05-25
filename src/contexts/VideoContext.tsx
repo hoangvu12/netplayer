@@ -1,5 +1,5 @@
-import Hls, { Events } from 'hls.js';
 import React, { useCallback, useContext, useEffect } from 'react';
+import Hls from '../types/hls.js';
 
 interface VideoState {
   currentTime: number;
@@ -146,7 +146,7 @@ export const VideoContextProvider: React.FC<VideoContextProviderProps> = ({
   useEffect(() => {
     if (!hls) return;
 
-    hls.on(Events.ERROR, (_, data) => {
+    hls.on(Hls.Events.ERROR, (_, data) => {
       updateState({
         error: data.details,
       });
