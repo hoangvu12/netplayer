@@ -19,7 +19,6 @@
     "release": "shx cp package.json ./dist && np"
   },
   "peerDependencies": {
-    "hls.js": "^1.1.5",
     "react": ">=16",
     "react-dom": ">=16"
   },
@@ -65,7 +64,8 @@
     "typescript": "^4.6.4"
   },
   "dependencies": {
-    "@plussub/srt-vtt-parser": "^1.1.0"
+    "@plussub/srt-vtt-parser": "^1.1.0",
+    "load-script": "^2.0.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

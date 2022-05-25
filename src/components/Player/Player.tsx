@@ -1,9 +1,14 @@
-import Hls from 'hls.js';
 import * as React from 'react';
 import { useVideoState } from '../../contexts/VideoStateContext';
 import { Source, Subtitle } from '../../types';
 import { parseNumberFromString } from '../../utils';
 import styles from './Player.module.css';
+import Hls from '../../types/hls.js';
+import loadScript from '../../utils/load-script';
+
+const HLS_SCRIPT_URL =
+  'https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js';
+const HLS_VARIABLE_NAME = 'Hls';
 
 export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
   sources: Source[];
@@ -69,7 +74,12 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
             hls.current.destroy();
           }
 
-          let _hls: Hls = new Hls({
+          const HlsSDK = await loadScript<typeof Hls>(
+            HLS_SCRIPT_URL,
+            HLS_VARIABLE_NAME
+          );
+
+          let _hls: Hls = new HlsSDK({
             xhrSetup: (xhr, url) => {
               let requestUrl = changeSourceUrl?.(url, source) || url;
 
