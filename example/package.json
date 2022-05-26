@@ -13,7 +13,8 @@
     "react": "link:../node_modules/react",
     "react-app-polyfill": "^1.0.0",
     "react-dom": "link:../node_modules/react-dom/profiling",
-    "react-live": "^2.4.1"
+    "react-live": "^2.4.1",
+    "url-toolkit": "^2.2.5"
   },
   "alias": {
     "react": "../node_modules/react",

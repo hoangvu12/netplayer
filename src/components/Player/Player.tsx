@@ -88,6 +88,9 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
             ...hlsConfig,
           });
 
+          _hls.subtitleTrack = -1;
+          _hls.subtitleDisplay = false;
+
           if (hlsRef) {
             hlsRef.current = _hls;
           }
@@ -126,6 +129,25 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
               }));
             });
           });
+
+          _hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_, event) => {
+            const modifiedSubtitles = event.subtitleTracks.map(
+              (track, index) => ({
+                file: track.details?.fragments?.[0].url || track.url,
+                lang: track.lang || index.toString(),
+                language: track.name,
+              })
+            );
+
+            setState(() => ({
+              subtitles: modifiedSubtitles,
+              currentSubtitle: modifiedSubtitles[0],
+            }));
+          });
+
+          // _hls.on(Hls.Events.AUDIO_TRACKS_UPDATED, (_, event) => {
+          //   console.log('audioTracks', event.audioTracks);
+          // });
 
           _hls.on(Hls.Events.ERROR, function(event, data) {
             console.log('ERROR:', event, data);

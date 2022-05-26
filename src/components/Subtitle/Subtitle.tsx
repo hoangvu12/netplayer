@@ -3,11 +3,12 @@ import { parse } from '@plussub/srt-vtt-parser';
 import { useVideoState } from '../../contexts/VideoStateContext';
 import { useVideo } from '../../contexts/VideoContext';
 import styles from './Subtitle.module.css';
-import { classNames } from '../../utils';
+import { classNames, isValidUrl } from '../../utils';
 import { useInteract } from '../../contexts/VideoInteractingContext';
 import { useSubtitleSettings } from '../../contexts/SubtitleSettingsContext';
 import { isDesktop } from '../../utils/device';
 import useTextScaling from '../../hooks/useTextScaling';
+import { buildAbsoluteURL } from 'url-toolkit';
 
 const textStyles = {
   none: '',
@@ -15,6 +16,34 @@ const textStyles = {
 };
 
 const BASE_FONT_SIZE = 16;
+
+const M3U8_SUBTITLE_REGEX = /.*\.(vtt|srt)/g;
+
+const requestSubtitle = async (url: string): Promise<string | null> => {
+  if (url.includes('vtt') || url.includes('srt')) {
+    const response = await fetch(url);
+    const text = await response.text();
+
+    return text;
+  }
+
+  if (url.includes('m3u8')) {
+    const response = await fetch(url);
+    const text = await response.text();
+
+    const matches = text.match(M3U8_SUBTITLE_REGEX);
+
+    if (!matches?.length) return null;
+
+    const nextUrl = isValidUrl(matches[0])
+      ? matches[0]
+      : buildAbsoluteURL(url, matches[0]);
+
+    return requestSubtitle(nextUrl);
+  }
+
+  return null;
+};
 
 const Subtitle = () => {
   const { state } = useVideoState();
@@ -38,10 +67,12 @@ const Subtitle = () => {
     const getSubtitle = async () => {
       setIsLoading(true);
 
-      const response = await fetch(subtitle.file);
-      const text = await response.text();
+      const text = await requestSubtitle(subtitle.file);
 
       setIsLoading(false);
+
+      if (!text) return;
+
       setSubtitleText(text);
     };
 
