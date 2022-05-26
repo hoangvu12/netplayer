@@ -36,6 +36,7 @@ interface I18nSettings {
   subtitleBackgroundOpacity: string;
   subtitleFontOpacity: string;
   subtitleFontSize: string;
+  audio: string;
 }
 
 export interface I18n {
@@ -82,9 +83,10 @@ const defaultI18n: I18n = {
     sliderDragMessage: 'Drag to seek video',
   },
   settings: {
+    audio: 'Audio',
     playbackSpeed: 'Playback speed',
     quality: 'Quality',
-    subtitle: 'Subtitles',
+    subtitle: 'Subtitle',
     subtitleSettings: 'Subtitle settings',
     reset: 'Reset',
     none: 'None',

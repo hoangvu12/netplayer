@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Subtitle } from '../types';
+import { Audio, Subtitle } from '../types';
 
 interface VideoState {
   subtitles: Subtitle[];
@@ -7,6 +7,8 @@ interface VideoState {
   currentQuality: string | null;
   currentSubtitle: Subtitle | null;
   isSubtitleDisabled: boolean;
+  currentAudio: Audio | null;
+  audios: Audio[];
 }
 
 type StateSelector = (currentState: VideoState) => Partial<VideoState>;
@@ -25,8 +27,10 @@ interface VideoContextProviderProps {
 const defaultVideoState: VideoState = {
   subtitles: [],
   qualities: [],
+  audios: [],
   currentQuality: null,
   currentSubtitle: null,
+  currentAudio: null,
   isSubtitleDisabled: false,
 };
 
@@ -45,9 +49,7 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
   });
 
   const updateState: UpdateStateAction = stateSelector => {
-    const newState = stateSelector(state);
-
-    setState({ ...state, ...newState });
+    setState(prev => ({ ...prev, ...stateSelector(prev) }));
   };
 
   return (

@@ -1,13 +1,18 @@
 export type Source = {
-  file: string
-  label?: string
-}
+  file: string;
+  label?: string;
+};
 
 export type Subtitle = {
-  file: string
-  lang: string
-  language: string
-}
+  file: string;
+  lang: string;
+  language: string;
+};
+
+export type Audio = {
+  lang: string;
+  language: string;
+};
 
 const shortcuts = [
   'play',
@@ -16,14 +21,14 @@ const shortcuts = [
   'backward',
   'subtitle',
   'fullscreen',
-  'volume'
-] as const
+  'volume',
+] as const;
 
-export type Shortcut = string | string[]
-export type Shortcuts = Record<typeof shortcuts[number], Shortcut>
+export type Shortcut = string | string[];
+export type Shortcuts = Record<typeof shortcuts[number], Shortcut>;
 
 export type HotKey = {
-  fn: (videoEl: HTMLVideoElement) => void
-  name: string
-  hotKey: string | string[]
-}
+  fn: (videoEl: HTMLVideoElement) => void;
+  name: string;
+  hotKey: string | string[];
+};

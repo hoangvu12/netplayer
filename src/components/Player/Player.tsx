@@ -145,9 +145,22 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
             }));
           });
 
-          // _hls.on(Hls.Events.AUDIO_TRACKS_UPDATED, (_, event) => {
-          //   console.log('audioTracks', event.audioTracks);
-          // });
+          _hls.on(Hls.Events.AUDIO_TRACKS_UPDATED, (_, event) => {
+            const modifiedAudios = event.audioTracks.map((track, index) => ({
+              lang: track.lang || index.toString(),
+              language: track.name,
+            }));
+
+            console.log(
+              modifiedAudios[_hls.audioTrack >= 0 ? _hls.audioTrack : 0]
+            );
+
+            setState(() => ({
+              audios: modifiedAudios,
+              currentAudio:
+                modifiedAudios[_hls.audioTrack >= 0 ? _hls.audioTrack : 0],
+            }));
+          });
 
           _hls.on(Hls.Events.ERROR, function(event, data) {
             console.log('ERROR:', event, data);
@@ -248,6 +261,24 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
         videoRef.removeEventListener('canplay', handleQualityChange);
       };
     }, [state?.currentQuality]);
+
+    React.useEffect(() => {
+      const videoRef = innerRef.current;
+
+      if (!videoRef) return;
+      if (!state?.audios.length) return;
+      if (!hls?.current) return;
+
+      const currentAudio = state?.currentAudio;
+
+      if (!currentAudio) return;
+
+      const currentAudioTrack = state.audios.findIndex(
+        audio => audio.lang === currentAudio.lang
+      );
+
+      hls.current.audioTrack = currentAudioTrack;
+    }, [state?.currentAudio]);
 
     return (
       <video
