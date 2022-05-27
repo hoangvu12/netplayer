@@ -126,7 +126,7 @@ export const VideoPropsProvider: React.FC<Partial<NetPlayerProps>> = ({
 
   return (
     // @ts-ignore
-    <VideoPropsContext.Provider value={{ i18n, hotkeys, ...props }}>
+    <VideoPropsContext.Provider value={{ ...props, i18n, hotkeys }}>
       {children}
     </VideoPropsContext.Provider>
   );
