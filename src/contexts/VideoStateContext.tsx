@@ -49,7 +49,7 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
   });
 
   useEffect(() => {
-    setState({ ...state, ...defaultState });
+    setState({ ...defaultVideoState, ...defaultState });
   }, [defaultState]);
 
   const updateState: UpdateStateAction = stateSelector => {
