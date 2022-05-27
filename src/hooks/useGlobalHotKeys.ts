@@ -32,7 +32,7 @@ const useGlobalHotKeys = (videoEl: HTMLVideoElement) => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [videoEl]);
+  }, [videoEl, hotkeys]);
 };
 
 export default useGlobalHotKeys;
