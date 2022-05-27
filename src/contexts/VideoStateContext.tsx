@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Audio, Subtitle } from '../types';
 
 interface VideoState {
@@ -47,6 +47,10 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
     ...defaultVideoState,
     ...defaultState,
   });
+
+  useEffect(() => {
+    setState({ ...state, ...defaultState });
+  }, [defaultState]);
 
   const updateState: UpdateStateAction = stateSelector => {
     setState(prev => ({ ...prev, ...stateSelector(prev) }));

@@ -151,10 +151,6 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
               language: track.name,
             }));
 
-            console.log(
-              modifiedAudios[_hls.audioTrack >= 0 ? _hls.audioTrack : 0]
-            );
-
             setState(() => ({
               audios: modifiedAudios,
               currentAudio:
