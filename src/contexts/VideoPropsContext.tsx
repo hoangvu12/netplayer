@@ -120,7 +120,7 @@ export const VideoPropsProvider: React.FC<Partial<NetPlayerProps>> = ({
     props.i18n,
   ]);
   const hotkeys = React.useMemo(
-    () => mergeDeep(defaultHotKeys, props.hotkeys),
+    () => defaultHotKeys.concat(props.hotkeys || []),
     [props.hotkeys]
   );
 
