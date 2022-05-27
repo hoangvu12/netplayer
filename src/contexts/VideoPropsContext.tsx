@@ -9,7 +9,7 @@ import volumeHotKey from '../hotkeys/volume';
 import { HotKey, Shortcuts } from '../types';
 import { mergeDeep } from '../utils';
 
-interface I18nControls {
+interface I18nControls extends I18nField {
   play: string;
   pause: string;
   forward: string;
@@ -24,7 +24,7 @@ interface I18nControls {
   sliderDragMessage: string;
 }
 
-interface I18nSettings {
+interface I18nSettings extends I18nField {
   playbackSpeed: string;
   subtitle: string;
   quality: string;
@@ -39,7 +39,8 @@ interface I18nSettings {
   audio: string;
 }
 
-export interface I18n {
+type I18nField = { [k: string]: string | I18nField };
+export interface I18n extends I18nField {
   controls: I18nControls;
   settings: I18nSettings;
 }
