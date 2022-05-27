@@ -21,10 +21,18 @@ const FullscreenButton = () => {
 
     if (!isFullscreen) {
       // @ts-ignore
-      screenfull.request(containerEl);
+      screenfull.request(containerEl).then(() => {
+        if (!isMobile) return;
+
+        screen.orientation.lock('landscape');
+      });
       setIsFullscreen(true);
     } else {
-      screenfull.exit();
+      screenfull.exit().then(() => {
+        if (!isMobile) return;
+
+        screen.orientation.lock('portrait');
+      });
       setIsFullscreen(false);
     }
   }, [isFullscreen]);
@@ -33,11 +41,15 @@ const FullscreenButton = () => {
     const handleFullscreen = () => {
       const isFullscreen = !!document.fullscreenElement;
 
-      if (isFullscreen && !isMobile) {
-        screen.orientation.lock('landscape');
-      }
-
       setIsFullscreen(isFullscreen);
+
+      if (!isMobile) return;
+
+      if (isFullscreen) {
+        screen.orientation.lock('landscape');
+      } else {
+        screen.orientation.lock('portrait');
+      }
     };
 
     const containerEl = document.querySelector(`.${PLAYER_CONTAINER_CLASS}`);
