@@ -98,7 +98,10 @@ const usePopover = <T extends HTMLElement, K extends HTMLElement>(
     resizeObserver.observe(floatingRef.current);
 
     referenceRef.current.addEventListener('resize', update);
-    window.addEventListener('scroll', update, { passive: false });
+    document.addEventListener('scroll', update, {
+      passive: false,
+      capture: true,
+    });
     window.addEventListener('resize', update);
 
     update();
@@ -106,7 +109,7 @@ const usePopover = <T extends HTMLElement, K extends HTMLElement>(
     return () => {
       referenceRef.current?.removeEventListener('resize', update);
       window.removeEventListener('resize', update);
-      window.removeEventListener('scroll', update);
+      document.removeEventListener('scroll', update, { capture: true });
       resizeObserver.disconnect();
     };
   }, [update, floatingRef.current]);
