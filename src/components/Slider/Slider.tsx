@@ -1,7 +1,16 @@
-import React, { PropsWithChildren, useCallback, useRef } from 'react';
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react';
 import { classNames } from '../../utils';
 import styles from './Slider.module.css';
 
+interface SliderOptions {
+  vertical?: boolean;
+}
 interface SliderProps
   extends Omit<
     React.HTMLAttributes<HTMLDivElement>,
@@ -12,7 +21,12 @@ interface SliderProps
   onPercentChanging?: (percent: number) => void;
   onDragStart?: (percent: number) => void;
   onDragEnd?: (percent: number) => void;
+  vertical?: boolean;
+  width?: number | string;
+  height?: number | string;
 }
+
+const SliderContext = React.createContext<SliderOptions>({ vertical: false });
 
 const Slider = ({
   onPercentChange,
@@ -29,70 +43,77 @@ const Slider = ({
   className = '',
   onDragStart,
   onDragEnd,
+  vertical,
+  height,
+  width,
   ...props
-}: PropsWithChildren<SliderProps>) => {
+}: PropsWithChildren<SliderProps & SliderOptions>) => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const isMouseDown = useRef(false);
   const lastTouch = useRef<React.Touch | null>(null);
 
-  const calculatePercent = useCallback((offset: number) => {
-    if (!sliderRef.current) return 0;
+  const calculatePercent = useCallback(
+    (offset: number) => {
+      if (!sliderRef.current) return 0;
 
-    const { width, left } = sliderRef.current?.getBoundingClientRect()!;
-    const percent = (offset - left) / width;
-    const newPercent = percent <= 0 || isNaN(percent) ? 0 : percent * 100;
+      const {
+        width,
+        left,
+        top,
+        height,
+      } = sliderRef.current?.getBoundingClientRect()!;
 
-    return newPercent > 100 ? 100 : newPercent;
+      const percent = vertical
+        ? (height + top - offset) / height
+        : (offset - left) / width;
+
+      const newPercent = percent <= 0 || isNaN(percent) ? 0 : percent * 100;
+
+      return newPercent > 100 ? 100 : newPercent;
+    },
+    [vertical]
+  );
+
+  const handleDocumentTouchMove = useCallback((e: TouchEvent) => {
+    if (e.cancelable) {
+      e.preventDefault();
+    }
   }, []);
-
-  const handleMoving = useCallback(
-    (offset: number) => {
-      const percent = calculatePercent(offset);
-
-      onPercentIntent?.(percent);
-
-      if (!isMouseDown.current) return;
-    },
-    [onPercentIntent]
-  );
-
-  const handleSeek = useCallback(
-    (offset: number) => {
-      const percent = calculatePercent(offset);
-
-      onPercentChange?.(percent);
-    },
-    [onPercentChange]
-  );
 
   const handleTouchStart: React.TouchEventHandler<HTMLDivElement> = useCallback(
     e => {
-      isMouseDown.current = true;
-      const offset = e.touches[0].clientX;
+      document.addEventListener('touchmove', handleDocumentTouchMove, {
+        passive: false,
+      });
 
-      handleSeek(offset);
-      onDragStart?.(calculatePercent(offset));
+      isMouseDown.current = true;
+      const offset = vertical ? e.touches[0].clientY : e.touches[0].clientX;
+      const percent = calculatePercent(offset);
+
+      onPercentChange?.(percent);
+      onDragStart?.(percent);
       onTouchStart?.(e);
     },
-    [onTouchStart, handleSeek]
+    [onTouchStart, calculatePercent, vertical]
   );
 
   const handleTouchMove: React.TouchEventHandler<HTMLDivElement> = useCallback(
     e => {
       lastTouch.current = e.touches[0];
-      const offset = e.touches[0].clientX;
+      const offset = vertical ? e.touches[0].clientY : e.touches[0].clientX;
       const percent = calculatePercent(offset);
 
-      handleMoving(offset);
+      onPercentIntent?.(percent);
       onTouchMove?.(e);
-      onDragEnd?.(percent);
       onPercentChanging?.(percent);
     },
-    [handleMoving, onTouchMove, onPercentChanging]
+    [onTouchMove, onPercentChanging, calculatePercent, vertical]
   );
 
   const handleTouchEnd: React.TouchEventHandler<HTMLDivElement> = useCallback(
     e => {
+      document.removeEventListener('touchmove', handleDocumentTouchMove);
+
       isMouseDown.current = false;
 
       onPercentIntent?.(0);
@@ -100,49 +121,54 @@ const Slider = ({
 
       if (!lastTouch.current) return;
 
-      const percent = calculatePercent(lastTouch.current.clientX);
+      const percent = calculatePercent(
+        vertical ? lastTouch.current.clientY : lastTouch.current.clientX
+      );
 
+      onDragEnd?.(percent);
       onPercentChange?.(percent);
     },
-    [onPercentChange, onTouchEnd, onPercentIntent]
+    [onPercentChange, onTouchEnd, onPercentIntent, calculatePercent, vertical]
   );
 
   const handleMouseDown: React.MouseEventHandler<HTMLDivElement> = useCallback(
     e => {
       isMouseDown.current = true;
-      const offset = e.clientX;
+      const offset = vertical ? e.clientY : e.clientX;
       const percent = calculatePercent(offset);
 
       onDragEnd?.(percent);
-      handleSeek(offset);
+      onPercentChange?.(percent);
       onMouseDown?.(e);
     },
-    [onMouseDown, handleSeek]
+    [onMouseDown, calculatePercent, vertical]
   );
 
   const handleMouseUp: React.MouseEventHandler<HTMLDivElement> = useCallback(
     e => {
       isMouseDown.current = false;
-      const percent = calculatePercent(e.clientX);
+      const percent = calculatePercent(vertical ? e.clientY : e.clientX);
 
       onDragEnd?.(percent);
       onPercentChange?.(percent);
       onPercentIntent?.(0);
       onMouseUp?.(e);
     },
-    [onMouseUp, onPercentChange, onPercentIntent]
+    [onMouseUp, onPercentChange, onPercentIntent, calculatePercent, vertical]
   );
 
   const handleMouseMove: React.MouseEventHandler<HTMLDivElement> = useCallback(
     e => {
-      handleMoving(e.clientX);
+      const percent = calculatePercent(vertical ? e.clientY : e.clientX);
+
+      onPercentIntent?.(percent);
       onMouseMove?.(e);
 
       if (isMouseDown.current) {
-        onPercentChanging?.(calculatePercent(e.clientX));
+        onPercentChanging?.(calculatePercent(percent));
       }
     },
-    [handleMoving, onMouseMove, onPercentChanging, onMouseDown]
+    [onMouseMove, onPercentChanging, onMouseDown, calculatePercent, vertical]
   );
 
   const handleMouseLeave: React.MouseEventHandler<HTMLDivElement> = useCallback(
@@ -157,7 +183,7 @@ const Slider = ({
 
       // Handle if user dragging outside of slider
       const handleWindowMouseMove = (e: MouseEvent) => {
-        const percent = calculatePercent(e.clientX);
+        const percent = calculatePercent(vertical ? e.clientY : e.clientX);
 
         onPercentIntent?.(percent);
 
@@ -169,7 +195,7 @@ const Slider = ({
       const handleWindowMouseUp = (e: MouseEvent) => {
         isMouseDown.current = false;
 
-        const percent = calculatePercent(e.clientX);
+        const percent = calculatePercent(vertical ? e.clientY : e.clientX);
 
         onDragEnd?.(percent);
         onPercentIntent?.(0);
@@ -187,26 +213,44 @@ const Slider = ({
       onPercentIntent,
       onPercentChange,
       onPercentChanging,
-      handleMoving,
+      calculatePercent,
+      vertical,
     ]
   );
 
+  const sliderStyle = useMemo(() => {
+    if (width && height) return { width, height };
+
+    if (vertical) {
+      return { height: '100%', width: '5px' };
+    }
+
+    return { width: '100%', height: '5px' };
+  }, [width, height]);
+
   return (
-    <div
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-      onMouseMove={handleMouseMove}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      ref={sliderRef}
-      className={classNames(styles.container, className)}
-      {...props}
-    >
-      {children}
-    </div>
+    <SliderContext.Provider value={{ vertical }}>
+      <div
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+        onMouseMove={handleMouseMove}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        ref={sliderRef}
+        className={classNames(styles.container, className)}
+        style={{ ...sliderStyle }}
+        {...props}
+      >
+        {children}
+      </div>
+    </SliderContext.Provider>
   );
+};
+
+export const useSlider = () => {
+  return useContext(SliderContext);
 };
 
 interface BarProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -215,6 +259,8 @@ interface BarProps extends React.HTMLAttributes<HTMLDivElement> {
 
 interface DotProps extends React.HTMLAttributes<HTMLDivElement> {
   percent?: number;
+  width?: number;
+  height?: number;
 }
 
 const Bar: React.FC<BarProps> = ({
@@ -222,26 +268,75 @@ const Bar: React.FC<BarProps> = ({
   className = '',
   style,
   ...props
-}) => (
-  <div
-    className={classNames(styles.bar, className)}
-    style={{ width: percent + '%', ...style }}
-    {...props}
-  />
-);
+}) => {
+  const { vertical } = useSlider();
+
+  const barStyle = useMemo(() => {
+    if (vertical) {
+      return {
+        height: percent + '%',
+        width: '100%',
+        bottom: '0px',
+      };
+    }
+
+    return {
+      width: percent + '%',
+      height: '100%',
+    };
+  }, [percent, vertical]);
+
+  return (
+    <div
+      className={classNames(styles.bar, className)}
+      style={{ ...barStyle, ...style }}
+      {...props}
+    />
+  );
+};
 
 const Dot: React.FC<DotProps> = ({
   percent = 100,
   className = '',
   style,
+  width = 13,
+  height = 13,
   ...props
-}) => (
-  <div
-    className={classNames(styles.dot, className)}
-    style={{ left: percent + '%', ...style }}
-    {...props}
-  />
-);
+}) => {
+  const { vertical } = useSlider();
+
+  const dotStyle = useMemo(() => {
+    if (vertical) {
+      return {
+        bottom: percent + '%',
+      };
+    }
+
+    return {
+      left: percent + '%',
+    };
+  }, [percent, vertical]);
+
+  const dotSize = useMemo(
+    () => ({
+      width: width + 'px',
+      height: height + 'px',
+    }),
+    [width, height]
+  );
+
+  return (
+    <div
+      className={classNames(styles.dot, className)}
+      style={{
+        ...dotStyle,
+        ...dotSize,
+        ...style,
+      }}
+      {...props}
+    />
+  );
+};
 
 Slider.Bar = Bar;
 Slider.Dot = Dot;

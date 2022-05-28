@@ -1,17 +1,12 @@
 .container {
-  width: 100%;
-  height: 16px;
   cursor: pointer;
 }
 
 .bar {
-  height: 100%;
   position: absolute;
 }
 
 .dot {
-  width: 13px;
-  height: 13px;
   position: absolute;
   border-radius: 9999px;
   top: 50%;

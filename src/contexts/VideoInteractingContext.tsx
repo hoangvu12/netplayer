@@ -1,23 +1,24 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react';
 
 interface ContextValue {
-  isInteracting: boolean
-  setIsInteracting: React.Dispatch<React.SetStateAction<boolean>>
+  isInteracting: boolean;
+  setIsInteracting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface VideoContextProviderProps {
-  defaultValue?: boolean
+  defaultValue?: boolean;
 }
 
 export const VideoInteractingContext = React.createContext<ContextValue>({
   isInteracting: false,
-  setIsInteracting: () => {}
-})
+  setIsInteracting: () => {},
+});
 
-export const VideoInteractingContextProvider: React.FC<
-  VideoContextProviderProps
-> = ({ children, defaultValue = false }) => {
-  const [isInteracting, setIsInteracting] = useState(defaultValue)
+export const VideoInteractingContextProvider: React.FC<VideoContextProviderProps> = ({
+  children,
+  defaultValue = false,
+}) => {
+  const [isInteracting, setIsInteracting] = useState(defaultValue);
 
   return (
     <VideoInteractingContext.Provider
@@ -25,9 +26,9 @@ export const VideoInteractingContextProvider: React.FC<
     >
       {children}
     </VideoInteractingContext.Provider>
-  )
-}
+  );
+};
 
 export const useInteract = () => {
-  return useContext(VideoInteractingContext)
-}
+  return useContext(VideoInteractingContext);
+};

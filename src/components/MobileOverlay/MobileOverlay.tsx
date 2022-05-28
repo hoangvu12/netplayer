@@ -5,6 +5,7 @@ import { useVideoProps } from '../../contexts/VideoPropsContext';
 import { classNames } from '../../utils';
 import BackwardButton from '../Controls/BackwardButton';
 import ForwardButton from '../Controls/ForwardButton';
+import MobileVolumeSlider from '../Controls/MobileVolumeSlider';
 import PlayPauseButton from '../Controls/PlayPauseButton';
 import SettingsButton from '../Controls/SettingsButton';
 import SliderIcon from '../icons/SliderIcon';
@@ -40,6 +41,8 @@ const MobileOverlay = () => {
       >
         {i18n.controls.sliderDragMessage}
       </TextIcon>
+
+      <MobileVolumeSlider />
 
       <div
         className={classNames(

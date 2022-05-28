@@ -1,0 +1,33 @@
+.container {
+  padding: 0 1rem;
+  height: 100%;
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sliderContainer {
+  position: relative;
+}
+
+.volumeIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.backgroundBar {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.mainBar {
+  background-color: red;
+}
+
+.dot {
+  background-color: red;
+  transition: opacity 300ms;
+  opacity: 0;
+}
