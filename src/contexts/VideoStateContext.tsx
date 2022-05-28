@@ -1,5 +1,6 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo } from 'react';
 import { Audio, Subtitle } from '../types';
+import { useVideoProps } from './VideoPropsContext';
 
 interface VideoState {
   subtitles: Subtitle[];
@@ -40,9 +41,25 @@ export const VideoStateContext = React.createContext<VideoContextProps>({
 });
 
 export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
-  defaultState = {},
   children,
 }) => {
+  const props = useVideoProps();
+
+  const defaultQualities = useMemo(
+    () =>
+      props.sources.filter(source => source.label).map(source => source.label!),
+    [props.sources]
+  );
+
+  const defaultState = useMemo(
+    () => ({
+      currentSubtitle: props.subtitles[0],
+      subtitles: props.subtitles,
+      qualities: defaultQualities,
+    }),
+    [props.subtitles, defaultQualities]
+  );
+
   const [state, setState] = React.useState<VideoState>({
     ...defaultVideoState,
     ...defaultState,
