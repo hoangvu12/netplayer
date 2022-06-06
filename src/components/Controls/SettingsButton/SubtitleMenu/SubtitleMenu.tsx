@@ -20,16 +20,10 @@ const SubtitleMenu = () => {
       return;
     }
 
-    const chosenSubtitle = state.subtitles.find(
-      subtitle => subtitle.lang === value
-    );
-
-    if (!chosenSubtitle) return;
-
     setState(prev => ({
       ...prev,
       isSubtitleDisabled: false,
-      currentSubtitle: chosenSubtitle,
+      currentSubtitle: value,
     }));
   };
 
@@ -42,7 +36,7 @@ const SubtitleMenu = () => {
           ? state.isSubtitleDisabled
             ? 'off'
             : state?.subtitles?.[0]?.lang
-          : state.currentSubtitle.lang
+          : state.currentSubtitle
       }
       icon={<SubtitleIcon />}
       onChange={handleSubtitleChange}

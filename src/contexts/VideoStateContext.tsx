@@ -6,9 +6,9 @@ interface VideoState {
   subtitles: Subtitle[];
   qualities: string[];
   currentQuality: string | null;
-  currentSubtitle: Subtitle | null;
+  currentSubtitle: string | null;
   isSubtitleDisabled: boolean;
-  currentAudio: Audio | null;
+  currentAudio: string | null;
   audios: Audio[];
 }
 
@@ -40,6 +40,8 @@ export const VideoStateContext = React.createContext<VideoContextProps>({
   setState: () => {},
 });
 
+const LOCALSTORAGE_KEY = 'netplayer_video_settings';
+
 export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
   children,
 }) => {
@@ -53,7 +55,7 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
 
   const defaultState = useMemo(
     () => ({
-      currentSubtitle: props.subtitles[0],
+      currentSubtitle: props.subtitles[0].lang,
       subtitles: props.subtitles,
       qualities: defaultQualities,
     }),
@@ -66,8 +68,33 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
   });
 
   useEffect(() => {
-    setState({ ...defaultVideoState, ...defaultState });
+    const rawSettings = localStorage.getItem(LOCALSTORAGE_KEY);
+
+    if (!rawSettings) return;
+
+    const settings = JSON.parse(rawSettings);
+
+    setState({ ...defaultVideoState, ...defaultState, ...settings });
   }, [defaultState]);
+
+  useEffect(() => {
+    const {
+      currentAudio,
+      currentQuality,
+      currentSubtitle,
+      isSubtitleDisabled,
+    } = state;
+
+    localStorage.setItem(
+      LOCALSTORAGE_KEY,
+      JSON.stringify({
+        currentAudio,
+        currentQuality,
+        currentSubtitle,
+        isSubtitleDisabled,
+      })
+    );
+  }, [state]);
 
   const updateState: UpdateStateAction = stateSelector => {
     setState(prev => ({ ...prev, ...stateSelector(prev) }));

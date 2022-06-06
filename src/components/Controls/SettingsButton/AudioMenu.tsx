@@ -9,11 +9,9 @@ const AudioMenu = () => {
   const { i18n } = useVideoProps();
 
   const handleAudioChange = (value: string) => {
-    const chosenAudio = state.audios.find(audio => audio.lang === value);
-
     setState(prev => ({
       ...prev,
-      currentAudio: chosenAudio,
+      currentAudio: value,
     }));
   };
 
@@ -22,7 +20,7 @@ const AudioMenu = () => {
       menuKey="audios"
       title={i18n.settings.audio}
       activeItemKey={
-        !state.currentAudio ? state?.audios?.[0]?.lang : state.currentAudio.lang
+        !state.currentAudio ? state?.audios?.[0]?.lang : state.currentAudio
       }
       icon={<AudioIcon />}
       onChange={handleAudioChange}
