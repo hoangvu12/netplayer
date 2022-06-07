@@ -141,7 +141,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
             setState(() => ({
               subtitles: modifiedSubtitles,
-              currentSubtitle: modifiedSubtitles[0],
+              currentSubtitle: modifiedSubtitles[0]?.lang,
             }));
           });
 
@@ -154,7 +154,8 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
             setState(() => ({
               audios: modifiedAudios,
               currentAudio:
-                modifiedAudios[_hls.audioTrack >= 0 ? _hls.audioTrack : 0],
+                modifiedAudios[_hls.audioTrack >= 0 ? _hls.audioTrack : 0]
+                  ?.lang,
             }));
           });
 
@@ -270,7 +271,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       if (!currentAudio) return;
 
       const currentAudioTrack = state.audios.findIndex(
-        audio => audio.lang === currentAudio.lang
+        audio => audio.lang === currentAudio
       );
 
       hls.current.audioTrack = currentAudioTrack;
