@@ -32,10 +32,10 @@ const SubtitleMenu = () => {
       menuKey="subtitles"
       title={i18n.settings.subtitle}
       activeItemKey={
-        state.currentSubtitle === null
-          ? state.isSubtitleDisabled
-            ? 'off'
-            : state?.subtitles?.[0]?.lang
+        state.isSubtitleDisabled
+          ? 'off'
+          : !state.currentSubtitle
+          ? state?.subtitles?.[0]?.lang
           : state.currentSubtitle
       }
       icon={<SubtitleIcon />}

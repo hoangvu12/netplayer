@@ -56,7 +56,7 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
 
   const defaultState = useMemo(
     () => ({
-      currentSubtitle: props.subtitles[0].lang,
+      currentSubtitle: props.subtitles[0]?.lang,
       subtitles: props.subtitles,
       qualities: defaultQualities,
     }),
@@ -75,26 +75,30 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
 
     const settings: Partial<VideoState> = JSON.parse(rawSettings);
 
-    const langAudios = state.audios.map(a => a.lang);
-    const langSubtitles = state.subtitles.map(s => s.lang);
+    const newState = {
+      ...defaultVideoState,
+      ...defaultState,
+      ...props?.defaultVideoState,
+    };
+
+    const langAudios = state.audios.filter(a => a?.lang).map(a => a.lang);
+    const langSubtitles = state.subtitles.filter(a => a?.lang).map(s => s.lang);
     const langQualities = state.qualities;
 
     const filteredSettings = {
       currentAudio: isInArray(settings?.currentAudio, langAudios)
         ? (settings.currentAudio as string)
-        : null,
+        : newState.currentAudio,
       currentQuality: isInArray(settings?.currentQuality, langQualities)
         ? (settings.currentQuality as string)
-        : null,
+        : newState.currentQuality,
       currentSubtitle: isInArray(settings?.currentSubtitle, langSubtitles)
         ? (settings.currentSubtitle as string)
-        : null,
+        : newState.currentSubtitle,
     };
 
     setState({
-      ...defaultVideoState,
-      ...defaultState,
-      ...props?.defaultVideoState,
+      ...newState,
       ...filteredSettings,
     });
   }, [defaultState]);
