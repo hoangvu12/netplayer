@@ -73,3 +73,7 @@ export const isValidUrl = (url: string) => {
 
   return !!pattern.test(url);
 };
+
+export const isInArray = <T>(value: T, array: T[]) => {
+  return array.indexOf(value) > -1;
+};

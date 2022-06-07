@@ -8,6 +8,7 @@ import playPauseHotKey from '../hotkeys/playPause';
 import volumeHotKey from '../hotkeys/volume';
 import { HotKey, Shortcuts } from '../types';
 import { mergeDeep } from '../utils';
+import { VideoState } from './VideoStateContext';
 
 interface I18nControls extends I18nField {
   play: string;
@@ -61,11 +62,16 @@ export type Components = {
   Controls: React.FC;
   MobileControls: React.FC;
 };
+
 export interface NetPlayerProps extends PlayerProps {
   i18n?: I18n;
   shortcuts?: Shortcuts;
   hotkeys?: HotKey[];
   components?: Partial<Components>;
+  defaultVideoState?: Pick<
+    VideoState,
+    'currentAudio' | 'currentQuality' | 'currentSubtitle' | 'isSubtitleDisabled'
+  >;
 }
 
 const defaultI18n: I18n = {

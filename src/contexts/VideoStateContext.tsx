@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useMemo } from 'react';
 import { Audio, Subtitle } from '../types';
+import { isInArray } from '../utils';
 import { useVideoProps } from './VideoPropsContext';
 
-interface VideoState {
+export interface VideoState {
   subtitles: Subtitle[];
   qualities: string[];
   currentQuality: string | null;
@@ -72,9 +73,30 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
 
     if (!rawSettings) return;
 
-    const settings = JSON.parse(rawSettings);
+    const settings: Partial<VideoState> = JSON.parse(rawSettings);
 
-    setState({ ...defaultVideoState, ...defaultState, ...settings });
+    const langAudios = state.audios.map(a => a.lang);
+    const langSubtitles = state.subtitles.map(s => s.lang);
+    const langQualities = state.qualities;
+
+    const filteredSettings = {
+      currentAudio: isInArray(settings?.currentAudio, langAudios)
+        ? (settings.currentAudio as string)
+        : null,
+      currentQuality: isInArray(settings?.currentQuality, langQualities)
+        ? (settings.currentQuality as string)
+        : null,
+      currentSubtitle: isInArray(settings?.currentSubtitle, langSubtitles)
+        ? (settings.currentSubtitle as string)
+        : null,
+    };
+
+    setState({
+      ...defaultVideoState,
+      ...defaultState,
+      ...props?.defaultVideoState,
+      ...filteredSettings,
+    });
   }, [defaultState]);
 
   useEffect(() => {
