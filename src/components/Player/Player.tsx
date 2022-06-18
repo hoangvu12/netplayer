@@ -24,7 +24,6 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
   (
     {
       sources,
-      subtitles,
       children,
       hlsRef,
       hlsConfig,
@@ -40,7 +39,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
     const { state, setState } = useVideoState();
 
     const playerRef = React.useCallback(
-      node => {
+      (node) => {
         innerRef.current = node;
         if (typeof ref === 'function') {
           ref(node);
@@ -53,8 +52,8 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
     const initQuality = React.useCallback(() => {
       const sortedQualities = sources
-        .filter(src => !!src.label)
-        .map(src => src.label as string)
+        .filter((src) => !!src.label)
+        .map((src) => src.label as string)
         .sort((a, b) => parseNumberFromString(b) - parseNumberFromString(a));
 
       const notDuplicatedQualities: string[] = [
@@ -65,6 +64,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
         qualities: notDuplicatedQualities,
         currentQuality: sortedQualities[0],
       }));
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sources]);
 
     const initPlayer = React.useCallback(
@@ -79,9 +79,9 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
             HLS_VARIABLE_NAME
           );
 
-          let _hls: Hls = new HlsSDK({
+          const _hls: Hls = new HlsSDK({
             xhrSetup: (xhr, url) => {
-              let requestUrl = changeSourceUrl?.(url, source) || url;
+              const requestUrl = changeSourceUrl?.(url, source) || url;
 
               xhr.open('GET', requestUrl, true);
             },
@@ -104,7 +104,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           _hls.on(Hls.Events.MEDIA_ATTACHED, () => {
             _hls.loadSource(source.file);
 
-            _hls.on(Hls.Events.MANIFEST_PARSED, _ => {
+            _hls.on(Hls.Events.MANIFEST_PARSED, () => {
               if (autoPlay) {
                 innerRef?.current
                   ?.play()
@@ -120,8 +120,8 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
               const levels: string[] = _hls.levels
                 .sort((a, b) => b.height - a.height)
-                .filter(level => level.height)
-                .map(level => `${level.height}p`);
+                .filter((level) => level.height)
+                .map((level) => `${level.height}p`);
 
               setState(() => ({
                 qualities: levels,
@@ -159,7 +159,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
             }));
           });
 
-          _hls.on(Hls.Events.ERROR, function(event, data) {
+          _hls.on(Hls.Events.ERROR, function (event, data) {
             console.log('ERROR:', event, data);
 
             if (data.fatal) {
@@ -192,11 +192,12 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           innerRef.current.load();
         }
       },
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [sources]
     );
 
     React.useEffect(() => {
-      let _hls = hls.current;
+      const _hls = hls.current;
 
       initPlayer(sources[0]);
 
@@ -211,6 +212,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           _hls.destroy();
         }
       };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sources]);
 
     React.useEffect(() => {
@@ -229,7 +231,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
         // Handle changing quality.
         hls.current.currentLevel = hls.current.levels.findIndex(
-          level => level.height === Number(currentQuality.replace('p', ''))
+          (level) => level.height === Number(currentQuality.replace('p', ''))
         );
 
         return;
@@ -238,7 +240,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       const beforeChangeTime = videoRef.currentTime;
 
       const qualitySource = sources.find(
-        source => source.label === state.currentQuality
+        (source) => source.label === state.currentQuality
       );
 
       if (!qualitySource) return;
@@ -257,6 +259,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       return () => {
         videoRef.removeEventListener('canplay', handleQualityChange);
       };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state?.currentQuality]);
 
     React.useEffect(() => {
@@ -271,10 +274,11 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       if (!currentAudio) return;
 
       const currentAudioTrack = state.audios.findIndex(
-        audio => audio.lang === currentAudio
+        (audio) => audio.lang === currentAudio
       );
 
       hls.current.audioTrack = currentAudioTrack;
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state?.currentAudio]);
 
     return (
@@ -290,5 +294,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
     );
   }
 );
+
+Player.displayName = 'Player';
 
 export default Player;

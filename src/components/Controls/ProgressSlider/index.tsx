@@ -1,3 +1,3 @@
-import ProgressSlider from './ProgressSlider'
+import ProgressSlider from './ProgressSlider';
 
-export default ProgressSlider
+export default ProgressSlider;

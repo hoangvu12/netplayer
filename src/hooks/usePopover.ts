@@ -75,7 +75,7 @@ const usePopover = <T extends HTMLElement, K extends HTMLElement>(
           floatingRect.height / 2;
 
     let x = rawX;
-    let y = rawY;
+    const y = rawY;
 
     if (x + floatingRect.width > overflowRect.right) {
       x = overflowRect.right - floatingRect.width - offset;
@@ -88,16 +88,18 @@ const usePopover = <T extends HTMLElement, K extends HTMLElement>(
       y,
       strategy,
     });
-  }, [overflowElement]);
+  }, [offset, overflowElement, position, strategy]);
 
   useEffect(() => {
     if (!referenceRef.current || !floatingRef.current) return;
+
+    const reference = referenceRef.current;
 
     const resizeObserver = new ResizeObserver(update);
 
     resizeObserver.observe(floatingRef.current);
 
-    referenceRef.current.addEventListener('resize', update);
+    reference.addEventListener('resize', update);
     document.addEventListener('scroll', update, {
       passive: false,
       capture: true,
@@ -107,12 +109,12 @@ const usePopover = <T extends HTMLElement, K extends HTMLElement>(
     update();
 
     return () => {
-      referenceRef.current?.removeEventListener('resize', update);
+      reference?.removeEventListener('resize', update);
       window.removeEventListener('resize', update);
       document.removeEventListener('scroll', update, { capture: true });
       resizeObserver.disconnect();
     };
-  }, [update, floatingRef.current]);
+  }, [update]);
 
   return {
     floatingRef,

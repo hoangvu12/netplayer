@@ -9,13 +9,13 @@ const AudioMenu = () => {
   const { i18n } = useVideoProps();
 
   const handleAudioChange = (value: string) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       currentAudio: value,
     }));
   };
 
-  return !!state.audios.length ? (
+  return state.audios.length ? (
     <NestedMenu.SubMenu
       menuKey="audios"
       title={i18n.settings.audio}
@@ -25,7 +25,7 @@ const AudioMenu = () => {
       icon={<AudioIcon />}
       onChange={handleAudioChange}
     >
-      {state.audios.map(audio => (
+      {state.audios.map((audio) => (
         <NestedMenu.Item
           key={audio.lang}
           itemKey={audio.lang}

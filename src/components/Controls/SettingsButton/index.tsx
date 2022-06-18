@@ -1,3 +1,3 @@
-import SettingsButton from './SettingsButton'
+import SettingsButton from './SettingsButton';
 
-export default SettingsButton
+export default SettingsButton;

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useContext, useEffect, useMemo } from 'react';
 import { Audio, Subtitle } from '../types';
 import { isInArray } from '../utils';
@@ -50,7 +51,9 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
 
   const defaultQualities = useMemo(
     () =>
-      props.sources.filter(source => source.label).map(source => source.label!),
+      props.sources
+        .filter((source) => source.label)
+        .map((source) => source.label!),
     [props.sources]
   );
 
@@ -81,8 +84,10 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
       ...props?.defaultVideoState,
     };
 
-    const langAudios = state.audios.filter(a => a?.lang).map(a => a.lang);
-    const langSubtitles = state.subtitles.filter(a => a?.lang).map(s => s.lang);
+    const langAudios = state.audios.filter((a) => a?.lang).map((a) => a.lang);
+    const langSubtitles = state.subtitles
+      .filter((a) => a?.lang)
+      .map((s) => s.lang);
     const langQualities = state.qualities;
 
     const filteredSettings = {
@@ -101,6 +106,7 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
       ...newState,
       ...filteredSettings,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [defaultState]);
 
   useEffect(() => {
@@ -122,8 +128,8 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
     );
   }, [state]);
 
-  const updateState: UpdateStateAction = stateSelector => {
-    setState(prev => ({ ...prev, ...stateSelector(prev) }));
+  const updateState: UpdateStateAction = (stateSelector) => {
+    setState((prev) => ({ ...prev, ...stateSelector(prev) }));
   };
 
   return (

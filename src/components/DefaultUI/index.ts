@@ -1,3 +1,3 @@
-import DefaultUI from './DefaultUI'
+import DefaultUI from './DefaultUI';
 
-export default DefaultUI
+export default DefaultUI;

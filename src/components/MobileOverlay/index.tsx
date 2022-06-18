@@ -1,3 +1,3 @@
-import MobileOverlay from './MobileOverlay'
+import MobileOverlay from './MobileOverlay';
 
-export default MobileOverlay
+export default MobileOverlay;

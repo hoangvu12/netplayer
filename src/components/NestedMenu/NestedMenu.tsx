@@ -4,62 +4,62 @@ import React, {
   useCallback,
   useContext,
   useMemo,
-  useState
-} from 'react'
-import { classNames } from '../../utils'
-import ArrowLeftIcon from '../icons/ArrowLeftIcon'
-import ArrowRightIcon from '../icons/ArrowRightIcon'
-import TextIcon from '../TextIcon'
-import styles from './NestedMenu.module.css'
-import CheckIcon from '../icons/CheckIcon'
+  useState,
+} from 'react';
+import { classNames } from '../../utils';
+import ArrowLeftIcon from '../icons/ArrowLeftIcon';
+import ArrowRightIcon from '../icons/ArrowRightIcon';
+import TextIcon from '../TextIcon';
+import styles from './NestedMenu.module.css';
+import CheckIcon from '../icons/CheckIcon';
 interface Menu {
-  title: string
-  menuKey: string
+  title: string;
+  menuKey: string;
 }
 
 interface ContextProps {
-  activeMenu: Menu
-  push: (menu: Menu) => void
-  pop: () => void
+  activeMenu: Menu;
+  push: (menu: Menu) => void;
+  pop: () => void;
 }
 
 interface NestedMenuProps extends React.HTMLProps<HTMLDivElement> {}
 
-const defaultHistory: Menu[] = [{ menuKey: 'base', title: 'base' }]
+const defaultHistory: Menu[] = [{ menuKey: 'base', title: 'base' }];
 
 const NestedMenuContext = createContext<ContextProps>({
   activeMenu: { menuKey: 'base', title: 'Base' },
   push: () => {},
-  pop: () => {}
-})
+  pop: () => {},
+});
 
 const NestedMenu = ({
   children,
   className = '',
   ...props
 }: PropsWithChildren<NestedMenuProps>) => {
-  const [history, setHistory] = useState<Menu[]>(defaultHistory)
+  const [history, setHistory] = useState<Menu[]>(defaultHistory);
 
   const handleGoBack = useCallback(() => {
-    setHistory((prev) => prev.slice(0, -1))
-  }, [])
+    setHistory((prev) => prev.slice(0, -1));
+  }, []);
 
   const historyPush = useCallback((menu: Menu) => {
-    setHistory((prev) => [...prev, menu])
-  }, [])
+    setHistory((prev) => [...prev, menu]);
+  }, []);
 
   const historyPop = useCallback(() => {
-    setHistory((prev) => prev.slice(0, -1))
-  }, [])
+    setHistory((prev) => prev.slice(0, -1));
+  }, []);
 
-  const activeMenu = useMemo(() => history[history.length - 1], [history])
+  const activeMenu = useMemo(() => history[history.length - 1], [history]);
 
   return (
     <NestedMenuContext.Provider
       value={{
         activeMenu,
         push: historyPush,
-        pop: historyPop
+        pop: historyPop,
       }}
     >
       <div className={classNames(styles.container, className)} {...props}>
@@ -80,29 +80,29 @@ const NestedMenu = ({
         <ul className={styles.itemContainer}>{children}</ul>
       </div>
     </NestedMenuContext.Provider>
-  )
-}
+  );
+};
 
 export interface ItemProps
   extends Omit<React.HTMLProps<HTMLLIElement>, 'onChange'> {
-  parentMenuKey?: string
-  itemKey: string
-  title: string
-  activeItemKey?: string
-  value: string
-  onChange?: (value: string) => void
+  parentMenuKey?: string;
+  itemKey: string;
+  title: string;
+  activeItemKey?: string;
+  value: string;
+  onChange?: (value: string) => void;
 }
 
 export interface BaseItemProps
-  extends Omit<React.HTMLProps<HTMLLIElement>, 'slot'> {
-  title: string
-  isShown?: boolean
-  isActive?: boolean
-  activeIcon?: React.ReactNode
-  slot?: React.ReactNode
+  extends Omit<React.HTMLAttributes<HTMLLIElement>, 'slot'> {
+  title: string;
+  isShown?: boolean;
+  isActive?: boolean;
+  activeIcon?: React.ReactNode;
+  slot?: React.ReactNode;
 }
 
-const BaseItem = React.memo<BaseItemProps>(
+const BaseItem = React.memo(
   ({
     title,
     isShown,
@@ -111,7 +111,7 @@ const BaseItem = React.memo<BaseItemProps>(
     activeIcon,
     slot,
     ...props
-  }) => {
+  }: BaseItemProps) => {
     return isShown ? (
       <li className={classNames(styles.baseItem, className)} {...props}>
         {isActive && activeIcon && (
@@ -122,25 +122,26 @@ const BaseItem = React.memo<BaseItemProps>(
 
         {slot}
       </li>
-    ) : null
+    ) : null;
   }
-)
+);
 
-const Item = React.memo<ItemProps>(
+BaseItem.displayName = 'BaseItem';
+
+const Item = React.memo(
   ({
     title,
     parentMenuKey = 'base',
     itemKey,
-    className,
     activeItemKey,
     value,
     onChange,
     ...props
-  }) => {
-    const { activeMenu } = useContext(NestedMenuContext)
+  }: ItemProps) => {
+    const { activeMenu } = useContext(NestedMenuContext);
 
-    const isMenuActive = parentMenuKey === activeMenu.menuKey
-    const isItemActive = activeItemKey === itemKey
+    const isMenuActive = parentMenuKey === activeMenu.menuKey;
+    const isItemActive = activeItemKey === itemKey;
 
     return (
       <BaseItem
@@ -148,23 +149,25 @@ const Item = React.memo<ItemProps>(
         isShown={isMenuActive}
         isActive={isItemActive}
         onClick={() => {
-          onChange?.(value)
+          onChange?.(value);
         }}
         activeIcon={<CheckIcon />}
         {...props}
       />
-    )
+    );
   }
-)
+);
+
+Item.displayName = 'Item';
 
 export interface SubMenuProps
   extends Omit<React.HTMLProps<HTMLUListElement>, 'onChange'> {
-  menuKey: string
-  title: string
-  activeItemKey?: string
-  parentMenuKey?: string
-  icon?: React.ReactNode
-  onChange?: (value: string) => void
+  menuKey: string;
+  title: string;
+  activeItemKey?: string;
+  parentMenuKey?: string;
+  icon?: React.ReactNode;
+  onChange?: (value: string) => void;
 }
 
 const SubMenu: React.FC<SubMenuProps> = ({
@@ -178,55 +181,55 @@ const SubMenu: React.FC<SubMenuProps> = ({
   onChange,
   ...props
 }) => {
-  const { activeMenu, push } = useContext(NestedMenuContext)
+  const { activeMenu, push } = useContext(NestedMenuContext);
 
   const isActive = useMemo(
     () => activeMenu.menuKey === menuKey,
     [activeMenu.menuKey, menuKey]
-  )
+  );
   const isParentActive = useMemo(
     () => activeMenu.menuKey === parentMenuKey,
-    [activeMenu.menuKey, menuKey]
-  )
+    [activeMenu.menuKey, parentMenuKey]
+  );
 
   const handleSetMenu = useCallback(() => {
     push({
       menuKey,
-      title
-    })
-  }, [menuKey, title])
+      title,
+    });
+  }, [menuKey, push, title]);
 
   const resolvedChildren:
     | React.ReactElement<any, string | React.JSXElementConstructor<any>>
     | React.ReactPortal =
     React.isValidElement(children) && children.type === React.Fragment
       ? children.props.children
-      : children
+      : children;
 
   if (React.Children.count(resolvedChildren) === 0) {
-    return null
+    return null;
   }
 
   const childrenWithMenuKey = React.Children.map(resolvedChildren, (child) => {
-    if (!React.isValidElement(child)) return
+    if (!React.isValidElement(child)) return;
 
     const newElement = React.cloneElement(child, {
       ...child.props,
       parentMenuKey: menuKey,
       activeItemKey,
-      onChange
-    })
+      onChange,
+    });
 
-    return newElement
-  })
+    return newElement;
+  });
 
   const itemProps = React.Children.map(resolvedChildren, (child) => {
-    if (!React.isValidElement(child)) return
+    if (!React.isValidElement(child)) return;
 
-    return child.props as ItemProps
-  })
+    return child.props as ItemProps;
+  });
 
-  const activeItem = itemProps?.find((item) => item?.itemKey === activeItemKey)
+  const activeItem = itemProps?.find((item) => item?.itemKey === activeItemKey);
 
   return isActive ? (
     <ul className={classNames(styles.subMenuContainer, className)} {...props}>
@@ -253,10 +256,10 @@ const SubMenu: React.FC<SubMenuProps> = ({
     />
   ) : (
     <React.Fragment>{children}</React.Fragment>
-  )
-}
+  );
+};
 
-NestedMenu.Item = Item
-NestedMenu.SubMenu = SubMenu
+NestedMenu.Item = Item;
+NestedMenu.SubMenu = SubMenu;
 
-export default NestedMenu
+export default NestedMenu;

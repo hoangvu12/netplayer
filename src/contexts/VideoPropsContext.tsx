@@ -115,7 +115,7 @@ const defaultHotKeys: HotKey[] = [
 
 const mergeHotkeys = (main: HotKey[], target: HotKey[]) => {
   for (const hotkey of target) {
-    const index = main.findIndex(h => h.hotKey === hotkey.hotKey);
+    const index = main.findIndex((h) => h.hotKey === hotkey.hotKey);
 
     if (index !== -1) {
       main[index] = hotkey;
@@ -127,18 +127,18 @@ const mergeHotkeys = (main: HotKey[], target: HotKey[]) => {
   return main;
 };
 
-// @ts-ignore
-export const VideoPropsContext = React.createContext<
-  Required<NetPlayerProps>
->();
+export const VideoPropsContext =
+  // @ts-ignore
+  React.createContext<Required<NetPlayerProps>>(null);
 
 export const VideoPropsProvider: React.FC<Partial<NetPlayerProps>> = ({
   children,
   ...props
 }) => {
-  const i18n = React.useMemo(() => mergeDeep(defaultI18n, props.i18n), [
-    props.i18n,
-  ]);
+  const i18n = React.useMemo(
+    () => mergeDeep(defaultI18n, props.i18n),
+    [props.i18n]
+  );
   const hotkeys = React.useMemo(
     () => mergeHotkeys(defaultHotKeys, props.hotkeys || []),
     [props.hotkeys]

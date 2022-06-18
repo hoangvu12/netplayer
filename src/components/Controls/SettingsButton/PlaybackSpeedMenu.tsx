@@ -27,7 +27,7 @@ const PlaybackSpeedMenu = () => {
       icon={<PlaybackSpeedIcon />}
       onChange={handleChangeSpeed}
     >
-      {speeds.map(speed => (
+      {speeds.map((speed) => (
         <NestedMenu.Item
           key={speed}
           itemKey={speed.toString()}

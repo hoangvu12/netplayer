@@ -30,6 +30,8 @@ const Menu = React.memo(() => (
   </NestedMenu>
 ));
 
+Menu.displayName = 'SettingsMenu';
+
 const selector = `.${PLAYER_CONTAINER_CLASS}`;
 
 const SettingsButton = () => {

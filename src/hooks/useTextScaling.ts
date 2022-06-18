@@ -14,9 +14,8 @@ const getDimension = () => {
 };
 
 const useTextScaling = () => {
-  const [[shortDimension, longDimension], setDimension] = useState(
-    getDimension
-  );
+  const [[shortDimension, longDimension], setDimension] =
+    useState(getDimension);
 
   useEffect(() => {
     const handleResize = () => {

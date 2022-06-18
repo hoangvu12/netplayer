@@ -1,3 +1,3 @@
-import ControlButton from './ControlButton'
+import ControlButton from './ControlButton';
 
-export default ControlButton
+export default ControlButton;

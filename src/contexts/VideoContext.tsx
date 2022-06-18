@@ -50,20 +50,20 @@ export const VideoContextProvider: React.FC<VideoContextProviderProps> = ({
   const [hls, setHls] = React.useState<Hls | null>(null);
 
   const updateState = useCallback((state: Partial<VideoState>) => {
-    setVideoState(prev => ({ ...prev, ...state }));
+    setVideoState((prev) => ({ ...prev, ...state }));
   }, []);
 
   useEffect(() => {
     if (!videoRef?.current) return;
 
     setVideoEl(videoRef.current);
-  }, []);
+  }, [videoRef]);
 
   useEffect(() => {
     if (!hlsRef?.current) return;
 
     setHls(hlsRef.current);
-  }, []);
+  }, [hlsRef]);
 
   useEffect(() => {
     if (!videoEl) return;
@@ -141,7 +141,7 @@ export const VideoContextProvider: React.FC<VideoContextProviderProps> = ({
       videoEl.removeEventListener('volumechange', handleVolumeChange);
       videoEl.removeEventListener('error', handleError);
     };
-  }, [videoEl]);
+  }, [updateState, videoEl]);
 
   useEffect(() => {
     if (!hls) return;
@@ -151,7 +151,7 @@ export const VideoContextProvider: React.FC<VideoContextProviderProps> = ({
         error: data.details,
       });
     });
-  }, [hls]);
+  }, [hls, updateState]);
 
   return (
     <VideoContext.Provider

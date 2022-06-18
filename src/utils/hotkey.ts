@@ -72,7 +72,7 @@ const CODES: Record<string, number> = {
   "'": 222,
 };
 
-for (var f = 1; f < 20; f++) {
+for (let f = 1; f < 20; f++) {
   CODES['f' + f] = 111 + f;
 }
 
@@ -85,9 +85,9 @@ function isHotkey(hotkey: string | string[], event: KeyboardEvent) {
     hotkey = [hotkey];
   }
 
-  const array = hotkey.map(string => parseHotkey(string));
+  const array = hotkey.map((string) => parseHotkey(string));
   const check = (e: KeyboardEvent) =>
-    array.some(object => compareHotkey(object, e));
+    array.some((object) => compareHotkey(object, e));
   const ret = event == null ? check : check(event);
   return ret;
 }

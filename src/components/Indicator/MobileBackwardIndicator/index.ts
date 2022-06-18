@@ -1,3 +1,3 @@
-import MobileBackwardIndicator from './MobileBackwardIndicator'
+import MobileBackwardIndicator from './MobileBackwardIndicator';
 
-export default MobileBackwardIndicator
+export default MobileBackwardIndicator;

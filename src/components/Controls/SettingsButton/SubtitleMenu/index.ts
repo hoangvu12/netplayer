@@ -1,3 +1,3 @@
-import SubtitleMenu from './SubtitleMenu'
+import SubtitleMenu from './SubtitleMenu';
 
-export default SubtitleMenu
+export default SubtitleMenu;

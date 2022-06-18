@@ -1,3 +1,3 @@
-import MobileControls from './MobileControls'
+import MobileControls from './MobileControls';
 
-export default MobileControls
+export default MobileControls;

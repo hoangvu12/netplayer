@@ -16,57 +16,62 @@ export const createIndicator = <T,>(
   return React.forwardRef<IndicatorRef, T>(component);
 };
 
-export const BaseIndicator = React.forwardRef<
-  IndicatorRef,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className = '', children = '', ...props }, ref) => {
-  const [show, setShow] = React.useState(false);
-  const [container, setContainer] = React.useState<Element>();
-  const innerRef = React.useRef<HTMLDivElement>(null);
+interface BaseIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
+  className?: string;
+}
 
-  React.useImperativeHandle(ref, () => ({
-    show: () => {
-      setShow(false);
+export const BaseIndicator = React.forwardRef<IndicatorRef, BaseIndicatorProps>(
+  ({ className = '', children = '', ...props }, ref) => {
+    const [show, setShow] = React.useState(false);
+    const [container, setContainer] = React.useState<Element>();
+    const innerRef = React.useRef<HTMLDivElement>(null);
 
-      setTimeout(() => {
-        setShow(true);
-      }, 0);
-    },
-    hide: () => setShow(false),
-  }));
+    React.useImperativeHandle(ref, () => ({
+      show: () => {
+        setShow(false);
 
-  React.useLayoutEffect(() => {
-    const containerEl = document.querySelector('.' + PLAYER_CONTAINER_CLASS);
+        setTimeout(() => {
+          setShow(true);
+        }, 0);
+      },
+      hide: () => setShow(false),
+    }));
 
-    if (!containerEl) return;
+    React.useLayoutEffect(() => {
+      const containerEl = document.querySelector('.' + PLAYER_CONTAINER_CLASS);
 
-    setContainer(containerEl);
-  }, []);
+      if (!containerEl) return;
 
-  return (
-    <Portal element={container}>
-      {show && (
-        <div ref={innerRef} className={classNames(className)} {...props}>
-          {children}
-        </div>
-      )}
-    </Portal>
-  );
-});
+      setContainer(containerEl);
+    }, []);
 
-const Indicator = React.forwardRef<
-  IndicatorRef,
-  React.HTMLAttributes<HTMLDivElement>
->(({ children, className = '', ...props }, ref) => {
-  return isDesktop ? (
-    <BaseIndicator
-      className={classNames(styles.indicator, className)}
-      {...props}
-      ref={ref}
-    >
-      {children}
-    </BaseIndicator>
-  ) : null;
-});
+    return (
+      <Portal element={container}>
+        {show && (
+          <div ref={innerRef} className={classNames(className)} {...props}>
+            {children}
+          </div>
+        )}
+      </Portal>
+    );
+  }
+);
+
+const Indicator = React.forwardRef<IndicatorRef, BaseIndicatorProps>(
+  ({ children, className = '', ...props }, ref) => {
+    return isDesktop ? (
+      <BaseIndicator
+        className={classNames(styles.indicator, className)}
+        {...props}
+        ref={ref}
+      >
+        {children}
+      </BaseIndicator>
+    ) : null;
+  }
+);
+
+BaseIndicator.displayName = 'BaseIndicator';
+Indicator.displayName = 'Indicator';
 
 export default Indicator;

@@ -10,10 +10,10 @@ const SubtitleButton = () => {
   const { i18n } = useVideoProps();
 
   const toggle = React.useCallback(() => {
-    setState(prev => ({
+    setState((prev) => ({
       isSubtitleDisabled: !prev.isSubtitleDisabled,
     }));
-  }, [state.isSubtitleDisabled]);
+  }, [setState]);
 
   return state?.subtitles?.length ? (
     <ControlButton

@@ -30,22 +30,23 @@ const Popover: React.FC<PopoverProps> = ({
   >({ offset: 10, strategy: 'fixed', ...options });
 
   const { className: popperClassName = '', ...popperRest } = popperProps!;
-  const {
-    className: referenceClassName = '',
-    ...referenceRest
-  } = referenceProps!;
+  const { className: referenceClassName = '', ...referenceRest } =
+    referenceProps!;
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleOpen: React.MouseEventHandler<HTMLDivElement> = useCallback(e => {
-    e.stopPropagation();
-    e.preventDefault();
+  const handleOpen: React.MouseEventHandler<HTMLDivElement> = useCallback(
+    (e) => {
+      e.stopPropagation();
+      e.preventDefault();
 
-    setIsOpen(true);
-  }, []);
+      setIsOpen(true);
+    },
+    []
+  );
 
   const handleClose: React.MouseEventHandler<HTMLDivElement> = useCallback(
-    e => {
+    (e) => {
       e.preventDefault();
       e.stopPropagation();
 
@@ -64,7 +65,7 @@ const Popover: React.FC<PopoverProps> = ({
     setPortalElement(el);
 
     update();
-  }, [portalSelector]);
+  }, [portalSelector, update]);
 
   return (
     <React.Fragment>

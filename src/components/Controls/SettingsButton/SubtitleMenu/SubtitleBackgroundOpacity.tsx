@@ -6,7 +6,7 @@ import NestedMenu, { SubMenuProps } from '../../../NestedMenu/NestedMenu';
 
 const opacities = [0, 25, 50, 75, 100];
 
-const SubtitleBackgroundOpacity: React.FC<Partial<SubMenuProps>> = props => {
+const SubtitleBackgroundOpacity: React.FC<Partial<SubMenuProps>> = (props) => {
   const { state, setState } = useSubtitleSettings();
   const { i18n } = useVideoProps();
 
@@ -15,12 +15,12 @@ const SubtitleBackgroundOpacity: React.FC<Partial<SubMenuProps>> = props => {
       {...props}
       menuKey="subtitle_background_opacity"
       title={i18n.settings.subtitleBackgroundOpacity}
-      onChange={value => {
+      onChange={(value) => {
         setState(() => ({ backgroundOpacity: Number(value) / 100 }));
       }}
       activeItemKey={(state.backgroundOpacity * 100).toString()}
     >
-      {opacities.map(opacity => (
+      {opacities.map((opacity) => (
         <NestedMenu.Item
           itemKey={opacity.toString()}
           title={`${opacity}%`}

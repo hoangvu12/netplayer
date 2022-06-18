@@ -4,7 +4,7 @@ import { useSubtitleSettings } from '../../../../contexts/SubtitleSettingsContex
 import { useVideoProps } from '../../../../contexts/VideoPropsContext';
 import NestedMenu, { SubMenuProps } from '../../../NestedMenu/NestedMenu';
 
-const SubtitleTextStyle: React.FC<Partial<SubMenuProps>> = props => {
+const SubtitleTextStyle: React.FC<Partial<SubMenuProps>> = (props) => {
   const { state, setState } = useSubtitleSettings();
   const { i18n } = useVideoProps();
 
@@ -13,7 +13,7 @@ const SubtitleTextStyle: React.FC<Partial<SubMenuProps>> = props => {
       {...props}
       menuKey="subtitle_text_style"
       title={i18n.settings.subtitleTextStyle}
-      onChange={value => {
+      onChange={(value) => {
         // @ts-ignore
         setState(() => ({ textStyle: value }));
       }}

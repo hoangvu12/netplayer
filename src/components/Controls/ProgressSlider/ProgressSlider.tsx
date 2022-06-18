@@ -44,7 +44,7 @@ const ProgressSlider = () => {
     if (!videoEl?.duration) return 0;
 
     return (currentTime / videoEl.duration) * 100;
-  }, [currentTime]);
+  }, [currentTime, videoEl?.duration]);
 
   const handlePercentIntent = useCallback((percent: number) => {
     setHoverPercent(percent);
@@ -65,19 +65,19 @@ const ProgressSlider = () => {
       setVideoState({ seeking: false });
       setCurrentTime(newTime);
     },
-    [videoEl?.duration]
+    [setVideoState, videoEl]
   );
 
   const handleDragStart = useCallback(() => {
     setVideoState({ seeking: true });
-  }, []);
+  }, [setVideoState]);
 
   const handleDragEnd = useCallback(() => {
     setVideoState({ seeking: true });
-  }, []);
+  }, [setVideoState]);
 
   const handlePercentChanging = useCallback(
-    percent => {
+    (percent) => {
       if (!videoEl?.duration) return;
 
       if (!videoEl.paused) {
@@ -89,7 +89,7 @@ const ProgressSlider = () => {
       setVideoState({ seeking: true });
       setCurrentTime(newTime);
     },
-    [videoEl?.duration]
+    [setVideoState, videoEl]
   );
 
   return (

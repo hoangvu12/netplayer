@@ -1,17 +1,17 @@
-import { HotKey } from '../types'
+import { HotKey } from '../types';
 
 const playPauseHotKey = (
   hotKey: string | string[] = ['k', 'space']
 ): HotKey => ({
   fn: (videoEl: HTMLVideoElement) => {
     if (videoEl.paused) {
-      videoEl.play()
+      videoEl.play();
     } else {
-      videoEl.pause()
+      videoEl.pause();
     }
   },
   name: 'playPause',
-  hotKey: hotKey
-})
+  hotKey: hotKey,
+});
 
-export default playPauseHotKey
+export default playPauseHotKey;

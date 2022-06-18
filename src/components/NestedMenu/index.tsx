@@ -1,3 +1,3 @@
-import NestedMenu from './NestedMenu'
+import NestedMenu from './NestedMenu';
 
-export default NestedMenu
+export default NestedMenu;

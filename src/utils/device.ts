@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // @ts-ignore
 export const isMobile: boolean = (function (a, b) {
   if (
@@ -8,10 +10,10 @@ export const isMobile: boolean = (function (a, b) {
       a.substr(0, 4)
     )
   )
-    return true
+    return true;
 })(
   // @ts-ignore
   navigator.userAgent || navigator.vendor || window.opera
-)
+);
 
-export const isDesktop = !isMobile
+export const isDesktop = !isMobile;

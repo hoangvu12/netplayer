@@ -29,26 +29,24 @@ export const defaultSubtitleSettings: SubtitleSettings = {
   textStyle: 'none',
 };
 
-export const SubtitleSettingsContext = React.createContext<
-  SubtitleSettingsProps
->({
-  state: defaultSubtitleSettings,
-  setState: () => {},
-});
+export const SubtitleSettingsContext =
+  React.createContext<SubtitleSettingsProps>({
+    state: defaultSubtitleSettings,
+    setState: () => {},
+  });
 
 const LOCALSTORAGE_KEY = 'netplayer_subtitle_settings';
 
-export const SubtitleSettingsProvider: React.FC<SubtitleSettingsProviderProps> = ({
-  defaultState = {},
-  children,
-}) => {
+export const SubtitleSettingsProvider: React.FC<
+  SubtitleSettingsProviderProps
+> = ({ defaultState = {}, children }) => {
   const [state, setState] = React.useState<SubtitleSettings>({
     ...defaultSubtitleSettings,
     ...defaultState,
   });
 
   const updateState: UpdateStateAction = useCallback(
-    stateSelector => {
+    (stateSelector) => {
       const newState = stateSelector(state);
 
       setState({ ...state, ...newState });

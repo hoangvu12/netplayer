@@ -27,7 +27,7 @@ const Dialog: React.FC<DialogProps> = ({
     if (!el) return;
 
     setPortalElement(el);
-  }, []);
+  }, [portalSelector]);
 
   return (
     <React.Fragment>

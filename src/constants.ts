@@ -1,1 +1,1 @@
-export const PLAYER_CONTAINER_CLASS = 'netplayer-container'
+export const PLAYER_CONTAINER_CLASS = 'netplayer-container';

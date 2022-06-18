@@ -26,7 +26,7 @@ const MobileVolumeSlider = () => {
 
       videoEl.volume = percent / 100;
     },
-    [videoEl]
+    [setIsInteracting, videoEl]
   );
 
   const VolumeComponent = useMemo(() => {

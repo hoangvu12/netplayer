@@ -18,7 +18,7 @@ const useGlobalHotKeys = (videoEl: HTMLVideoElement) => {
       )
         return;
 
-      const matchedHotKey = hotkeys.find(hotkey =>
+      const matchedHotKey = hotkeys.find((hotkey) =>
         isHotkey(hotkey.hotKey, event)
       );
 

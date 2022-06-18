@@ -56,7 +56,7 @@ const Subtitle = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const subtitle = useMemo(
-    () => state.subtitles?.find(sub => sub.lang === state.currentSubtitle),
+    () => state.subtitles?.find((sub) => sub.lang === state.currentSubtitle),
     [state.subtitles, state.currentSubtitle]
   );
 
@@ -87,7 +87,7 @@ const Subtitle = () => {
     const handleSubtitle = () => {
       const currentTime = videoEl.currentTime * 1000;
       const currentEntry = entries.find(
-        entry => entry.from <= currentTime && entry.to >= currentTime
+        (entry) => entry.from <= currentTime && entry.to >= currentTime
       );
 
       setCurrentText(currentEntry?.text || '');

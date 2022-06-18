@@ -11,7 +11,7 @@ const SubtitleMenu = () => {
 
   const handleSubtitleChange = (value: string) => {
     if (value === 'off') {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         isSubtitleDisabled: true,
         currentSubtitle: null,
@@ -20,14 +20,14 @@ const SubtitleMenu = () => {
       return;
     }
 
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       isSubtitleDisabled: false,
       currentSubtitle: value,
     }));
   };
 
-  return !!state.subtitles.length ? (
+  return state.subtitles.length ? (
     <NestedMenu.SubMenu
       menuKey="subtitles"
       title={i18n.settings.subtitle}
@@ -45,7 +45,7 @@ const SubtitleMenu = () => {
 
       <NestedMenu.Item itemKey="off" title={i18n.settings.off} value="off" />
 
-      {state.subtitles.map(subtitle => (
+      {state.subtitles.map((subtitle) => (
         <NestedMenu.Item
           key={subtitle.lang}
           itemKey={subtitle.lang}

@@ -1,3 +1,3 @@
-import MobileForwardIndicator from './MobileForwardIndicator'
+import MobileForwardIndicator from './MobileForwardIndicator';
 
-export default MobileForwardIndicator
+export default MobileForwardIndicator;

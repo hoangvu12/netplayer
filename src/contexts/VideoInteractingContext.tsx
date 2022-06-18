@@ -14,10 +14,9 @@ export const VideoInteractingContext = React.createContext<ContextValue>({
   setIsInteracting: () => {},
 });
 
-export const VideoInteractingContextProvider: React.FC<VideoContextProviderProps> = ({
-  children,
-  defaultValue = false,
-}) => {
+export const VideoInteractingContextProvider: React.FC<
+  VideoContextProviderProps
+> = ({ children, defaultValue = false }) => {
   const [isInteracting, setIsInteracting] = useState(defaultValue);
 
   return (

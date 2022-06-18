@@ -1,23 +1,23 @@
-import React, { useRef } from 'react'
-import ControlButton from './ControlButton'
-import BackwardIcon from '../icons/BackwardIcon'
-import { useVideo } from '../../contexts/VideoContext'
-import BackwardIndicator from '../Indicator/BackwardIndicator'
-import { IndicatorRef } from '../Indicator/Indicator'
-import { useVideoProps } from '../../contexts/VideoPropsContext'
-import { stringInterpolate } from '../../utils'
+import React, { useRef } from 'react';
+import ControlButton from './ControlButton';
+import BackwardIcon from '../icons/BackwardIcon';
+import { useVideo } from '../../contexts/VideoContext';
+import BackwardIndicator from '../Indicator/BackwardIndicator';
+import { IndicatorRef } from '../Indicator/Indicator';
+import { useVideoProps } from '../../contexts/VideoPropsContext';
+import { stringInterpolate } from '../../utils';
 
 const BackwardButton = () => {
-  const { videoEl } = useVideo()
-  const { i18n } = useVideoProps()
-  const backwardIndicator = useRef<IndicatorRef>(null)
+  const { videoEl } = useVideo();
+  const { i18n } = useVideoProps();
+  const backwardIndicator = useRef<IndicatorRef>(null);
 
   const handleClick = () => {
-    if (!videoEl) return
+    if (!videoEl) return;
 
-    backwardIndicator.current?.show()
-    videoEl.currentTime = videoEl.currentTime - 10
-  }
+    backwardIndicator.current?.show();
+    videoEl.currentTime = videoEl.currentTime - 10;
+  };
 
   return (
     <ControlButton
@@ -28,7 +28,7 @@ const BackwardButton = () => {
 
       <BackwardIndicator ref={backwardIndicator} />
     </ControlButton>
-  )
-}
+  );
+};
 
-export default BackwardButton
+export default BackwardButton;

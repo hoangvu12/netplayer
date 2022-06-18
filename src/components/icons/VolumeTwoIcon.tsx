@@ -1,24 +1,24 @@
-import * as React from 'react'
-import { SVGProps, memo } from 'react'
+import * as React from 'react';
+import { SVGProps, memo } from 'react';
 
 const VolumeTwoIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
-    width='24'
-    height='24'
-    viewBox='0 0 24 24'
-    fill='none'
-    xmlns='http://www.w3.org/2000/svg'
-    className='Hawkins-Icon Hawkins-Icon-Standard'
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="Hawkins-Icon Hawkins-Icon-Standard"
     style={{ width: '100%', height: '100%' }}
     {...props}
   >
     <path
-      fillRule='evenodd'
-      clipRule='evenodd'
-      d='M11 4a1 1 0 0 0-1.707-.707L4.586 8H1a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h3.586l4.707 4.707A1 1 0 0 0 11 20V4ZM5.707 9.707 9 6.414v11.172l-3.293-3.293L5.414 14H2v-4h3.414l.293-.293ZM17.071 4.93a10 10 0 0 1 0 14.142l-1.414-1.414a8 8 0 0 0 0-11.314L17.07 4.93Zm-2.828 2.828a6 6 0 0 1 0 8.486l-1.415-1.414a4 4 0 0 0 0-5.657l1.415-1.415Z'
-      fill='currentColor'
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M11 4a1 1 0 0 0-1.707-.707L4.586 8H1a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h3.586l4.707 4.707A1 1 0 0 0 11 20V4ZM5.707 9.707 9 6.414v11.172l-3.293-3.293L5.414 14H2v-4h3.414l.293-.293ZM17.071 4.93a10 10 0 0 1 0 14.142l-1.414-1.414a8 8 0 0 0 0-11.314L17.07 4.93Zm-2.828 2.828a6 6 0 0 1 0 8.486l-1.415-1.414a4 4 0 0 0 0-5.657l1.415-1.415Z"
+      fill="currentColor"
     />
   </svg>
-)
+);
 
-export default memo(VolumeTwoIcon)
+export default memo(VolumeTwoIcon);

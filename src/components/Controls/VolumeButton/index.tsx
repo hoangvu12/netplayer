@@ -1,3 +1,3 @@
-import VolumeButton from './VolumeButton'
+import VolumeButton from './VolumeButton';
 
-export default VolumeButton
+export default VolumeButton;

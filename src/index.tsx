@@ -12,7 +12,7 @@ const InnerPlayer = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
 
     const playerRef = React.useCallback(
-      node => {
+      (node) => {
         videoRef.current = node;
         if (typeof ref === 'function') {
           ref(node);
@@ -51,6 +51,9 @@ const NetPlayer = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
     );
   }
 );
+
+InnerPlayer.displayName = 'InnerPlayer';
+NetPlayer.displayName = 'NetPlayer';
 
 export * from './components';
 export * from './hooks';

@@ -39,6 +39,18 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
     const backIndicatorRef = React.useRef<IndicatorRef>(null);
     const forwardIndicatorRef = React.useRef<IndicatorRef>(null);
 
+    const resetInteractingCycle = React.useCallback(() => {
+      setIsInteracting(true);
+
+      if (interactingTimeout.current) {
+        clearTimeout(interactingTimeout.current);
+      }
+
+      interactingTimeout.current = setTimeout(() => {
+        setIsInteracting(false);
+      }, 3000);
+    }, [setIsInteracting]);
+
     const uiComponents = React.useMemo(
       () => ({
         Controls: components?.Controls || defaultComponents.Controls,
@@ -59,47 +71,49 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
       [components]
     );
 
-    const handleDoubleTap: React.DOMAttributes<
-      HTMLDivElement
-    >['onTouchStart'] = React.useCallback(e => {
-      if (!videoRef.current) return;
+    const handleDoubleTap: React.DOMAttributes<HTMLDivElement>['onTouchStart'] =
+      React.useCallback((e) => {
+        if (!videoRef.current) return;
 
-      const { clientX } = e.changedTouches[0];
+        const { clientX } = e.changedTouches[0];
 
-      const widthPercent = 45;
-      const width = (window.innerWidth * widthPercent) / 100;
+        const widthPercent = 45;
+        const width = (window.innerWidth * widthPercent) / 100;
 
-      if (clientX < width) {
-        backIndicatorRef?.current?.show();
-        videoRef.current.currentTime = videoRef.current.currentTime - 10;
-      } else if (clientX > window.innerWidth - width) {
-        forwardIndicatorRef?.current?.show();
-        videoRef.current.currentTime = videoRef.current.currentTime + 10;
-      }
-    }, []);
+        if (clientX < width) {
+          backIndicatorRef?.current?.show();
+          videoRef.current.currentTime = videoRef.current.currentTime - 10;
+        } else if (clientX > window.innerWidth - width) {
+          forwardIndicatorRef?.current?.show();
+          videoRef.current.currentTime = videoRef.current.currentTime + 10;
+        }
+      }, []);
 
-    const handleTap: React.DOMAttributes<
-      HTMLDivElement
-    >['onTouchStart'] = React.useCallback(e => {
-      const target = e.target as HTMLDivElement;
-      const videoOverlay = document.querySelector('.mobile-overlay');
+    const handleTap: React.DOMAttributes<HTMLDivElement>['onTouchStart'] =
+      React.useCallback(
+        (e) => {
+          const target = e.target as HTMLDivElement;
+          const videoOverlay = document.querySelector('.mobile-overlay');
 
-      if (!videoOverlay) {
-        resetInteractingCycle();
+          if (!videoOverlay) {
+            resetInteractingCycle();
 
-        return;
-      }
+            return;
+          }
 
-      const shouldCloseControls = target.classList.contains('mobile-overlay');
+          const shouldCloseControls =
+            target.classList.contains('mobile-overlay');
 
-      if (shouldCloseControls) {
-        setIsInteracting(false);
+          if (shouldCloseControls) {
+            setIsInteracting(false);
 
-        return;
-      }
+            return;
+          }
 
-      resetInteractingCycle();
-    }, []);
+          resetInteractingCycle();
+        },
+        [resetInteractingCycle, setIsInteracting]
+      );
 
     const onTap = useDoubleTap({
       onDoubleTap: handleDoubleTap,
@@ -110,7 +124,7 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
     useGlobalHotKeys(videoRef.current!);
 
     const playerRef = React.useCallback(
-      node => {
+      (node) => {
         videoRef.current = node;
         if (typeof ref === 'function') {
           ref(node);
@@ -120,18 +134,6 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
       },
       [ref]
     );
-
-    const resetInteractingCycle = React.useCallback(() => {
-      setIsInteracting(true);
-
-      if (interactingTimeout.current) {
-        clearTimeout(interactingTimeout.current);
-      }
-
-      interactingTimeout.current = setTimeout(() => {
-        setIsInteracting(false);
-      }, 3000);
-    }, []);
 
     return (
       <div
@@ -164,5 +166,7 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
     );
   }
 );
+
+DefaultUI.displayName = 'DefaultUI';
 
 export default React.memo(DefaultUI);

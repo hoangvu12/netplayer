@@ -60,9 +60,7 @@ export declare class AttrList {
   optionalFloat(attrName: string, defaultValue: number): number;
   enumeratedString(attrName: string): string | undefined;
   bool(attrName: string): boolean;
-  decimalResolution(
-    attrName: string
-  ):
+  decimalResolution(attrName: string):
     | {
         width: number;
         height: number;
@@ -73,8 +71,10 @@ export declare class AttrList {
 
 export declare type AudioPlaylistType = 'AUDIO';
 
-declare class AudioStreamController extends BaseStreamController
-  implements NetworkComponentAPI {
+declare class AudioStreamController
+  extends BaseStreamController
+  implements NetworkComponentAPI
+{
   private videoBuffer;
   private videoTrackCC;
   private waitingVideoCC;
@@ -233,8 +233,10 @@ export declare class BaseSegment {
   set url(value: string);
 }
 
-declare class BaseStreamController extends TaskLoop
-  implements NetworkComponentAPI {
+declare class BaseStreamController
+  extends TaskLoop
+  implements NetworkComponentAPI
+{
   protected hls: Hls;
   protected fragPrevious: Fragment | null;
   protected fragCurrent: Fragment | null;
@@ -306,9 +308,7 @@ declare class BaseStreamController extends TaskLoop
   private doFragPartsLoad;
   private handleFragLoadError;
   protected _handleTransmuxerFlush(chunkMeta: ChunkMetadata): void;
-  protected getCurrentContext(
-    chunkMeta: ChunkMetadata
-  ): {
+  protected getCurrentContext(chunkMeta: ChunkMetadata): {
     frag: Fragment;
     part: Part | null;
     level: Level;
@@ -2856,8 +2856,10 @@ declare type SourceBuffers = Partial<
   Record<SourceBufferName, ExtendedSourceBuffer>
 >;
 
-declare class StreamController extends BaseStreamController
-  implements NetworkComponentAPI {
+declare class StreamController
+  extends BaseStreamController
+  implements NetworkComponentAPI
+{
   private audioCodecSwap;
   private gapController;
   private level;
@@ -2991,8 +2993,10 @@ export declare interface SubtitleFragProcessedData {
 
 export declare type SubtitlePlaylistType = 'SUBTITLES' | 'CLOSED-CAPTIONS';
 
-declare class SubtitleStreamController extends BaseStreamController
-  implements NetworkComponentAPI {
+declare class SubtitleStreamController
+  extends BaseStreamController
+  implements NetworkComponentAPI
+{
   protected levels: Array<Level>;
   private currentTrackId;
   private tracksBuffered;
