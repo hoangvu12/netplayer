@@ -189,7 +189,7 @@ const Slider = ({
       onMouseMove?.(e);
 
       if (isMouseDown.current) {
-        onPercentChanging?.(calculatePercent(percent));
+        onPercentChanging?.(percent);
       }
     },
     [
