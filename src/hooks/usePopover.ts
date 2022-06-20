@@ -41,6 +41,8 @@ const usePopover = <T extends HTMLElement, K extends HTMLElement>(
   const referenceRef = useRef<T>(null);
 
   const update = useCallback(() => {
+    console.log('update');
+
     if (!referenceRef.current || !floatingRef.current) {
       return;
     }
@@ -93,13 +95,11 @@ const usePopover = <T extends HTMLElement, K extends HTMLElement>(
   useEffect(() => {
     if (!referenceRef.current || !floatingRef.current) return;
 
-    const reference = referenceRef.current;
-
     const resizeObserver = new ResizeObserver(update);
 
     resizeObserver.observe(floatingRef.current);
+    resizeObserver.observe(floatingRef.current);
 
-    reference.addEventListener('resize', update);
     document.addEventListener('scroll', update, {
       passive: false,
       capture: true,
@@ -109,12 +109,12 @@ const usePopover = <T extends HTMLElement, K extends HTMLElement>(
     update();
 
     return () => {
-      reference?.removeEventListener('resize', update);
       window.removeEventListener('resize', update);
       document.removeEventListener('scroll', update, { capture: true });
       resizeObserver.disconnect();
     };
-  }, [update]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [update, floatingRef.current, referenceRef.current]);
 
   return {
     floatingRef,
