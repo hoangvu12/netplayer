@@ -41,8 +41,6 @@ const usePopover = <T extends HTMLElement, K extends HTMLElement>(
   const referenceRef = useRef<T>(null);
 
   const update = useCallback(() => {
-    console.log('update');
-
     if (!referenceRef.current || !floatingRef.current) {
       return;
     }
