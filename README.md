@@ -20,13 +20,11 @@ import NetPlayer from 'netplayer';
 <NetPlayer
   sources={[
     {
-      file:
-        'https://www.googleapis.com/drive/v3/files/1Q6LsjpWgPoYIs6GaD8G6lNZRM2-VJXAY?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
+      file: 'https://www.googleapis.com/drive/v3/files/1Q6LsjpWgPoYIs6GaD8G6lNZRM2-VJXAY?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
       label: '1080p',
     },
     {
-      file:
-        'https://www.googleapis.com/drive/v3/files/1sKXS6VU8uUGeW8WPKDp2dXxwAJ96Tk9c?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
+      file: 'https://www.googleapis.com/drive/v3/files/1sKXS6VU8uUGeW8WPKDp2dXxwAJ96Tk9c?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
       label: '720p',
     },
   ]}
@@ -34,14 +32,12 @@ import NetPlayer from 'netplayer';
     {
       lang: 'en',
       language: 'English',
-      file:
-        'https://subtitles.netpop.app/subtitles/20211116/1637057950304_国王排名 2_英语.srt',
+      file: 'https://subtitles.netpop.app/subtitles/20211116/1637057950304_国王排名 2_英语.srt',
     },
     {
       lang: 'vi',
       language: 'Tiếng Việt',
-      file:
-        'https://subtitles.netpop.app/subtitles/20211116/1637057969656_国王排名 2_越南语.srt',
+      file: 'https://subtitles.netpop.app/subtitles/20211116/1637057969656_国王排名 2_越南语.srt',
     },
   ]}
 />;
@@ -61,6 +57,7 @@ NetPlayer accepts video element props and these specific props
 | `hlsConfig`       | `Hls['config']`                                                                                        | `hls.js` config                                             | `{}`                                                                                                            | `false`  |
 | `changeSourceUrl` | `(currentSourceUrl: string, source: Source): string`                                                   | A function that modify given source url (`hls` only)        | `() => null`                                                                                                    | `false`  |
 | `onHlsInit`       | `(hls: Hls): void`                                                                                     | A function that called after hls.js initialization          | `() => null`                                                                                                    | `false`  |
+| `onInit`          | `(videoEl: HTMLVideoElement): void`                                                                    | A function that called after video initialization           | `() => null`                                                                                                    | `false`  |
 | `ref`             | `React.MutableRefObject<HTMLVideoElement \| null>`                                                     | `video` element ref                                         | `null`                                                                                                          | `false`  |
 | `i18n`            | [I18n](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L41)        | Translations                                                | [Default Translations](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L69) | `false`  |
 | `hotkeys`         | [Hotkey](https://github.com/hoangvu12/netplayer/blob/main/src/types.ts#L25)[]                          | Hotkeys (shortcuts)                                         | [Default Hotkeys](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L99)      | `false`  |

@@ -6,7 +6,7 @@ import forwardHotKey from '../hotkeys/forward';
 import fullscreenHotKey from '../hotkeys/fullscreen';
 import playPauseHotKey from '../hotkeys/playPause';
 import volumeHotKey from '../hotkeys/volume';
-import { HotKey, Shortcuts } from '../types';
+import { HotKey, Shortcuts, Subtitle } from '../types';
 import { mergeDeep } from '../utils';
 import { VideoState } from './VideoStateContext';
 
@@ -67,6 +67,7 @@ export interface NetPlayerProps extends PlayerProps {
   i18n?: I18n;
   shortcuts?: Shortcuts;
   hotkeys?: HotKey[];
+  subtitles?: Subtitle[];
   components?: Partial<Components>;
   defaultVideoState?: Pick<
     VideoState,

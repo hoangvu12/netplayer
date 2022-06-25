@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useVideoState } from '../../contexts/VideoStateContext';
-import { Source, Subtitle } from '../../types';
+import { Source } from '../../types';
 import { parseNumberFromString } from '../../utils';
 import styles from './Player.module.css';
 import Hls from '../../types/hls.js';
@@ -12,13 +12,15 @@ const HLS_VARIABLE_NAME = 'Hls';
 
 export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
   sources: Source[];
-  subtitles?: Subtitle[];
   hlsRef?: React.MutableRefObject<Hls | null>;
   hlsConfig?: Hls['config'];
   changeSourceUrl?: (currentSourceUrl: string, source: Source) => string;
   onHlsInit?: (hls: Hls) => void;
+  onInit?: (videoEl: HTMLVideoElement) => void;
   autoPlay?: boolean;
 }
+
+const noop = () => {};
 
 const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
   (
@@ -28,7 +30,8 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       hlsRef,
       hlsConfig,
       changeSourceUrl,
-      onHlsInit,
+      onHlsInit = noop,
+      onInit = noop,
       autoPlay,
       ...props
     },
@@ -178,11 +181,13 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           onHlsInit?.(_hls);
         }
 
+        if (!innerRef.current) return;
+
+        onInit?.(innerRef.current);
+
         if (source.file.includes('m3u8')) {
           _initHlsPlayer();
         } else {
-          if (!innerRef.current) return;
-
           if (innerRef.current.src) {
             innerRef.current.pause();
           }
