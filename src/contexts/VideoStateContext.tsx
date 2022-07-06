@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Audio, Subtitle } from '../types';
 import { isInArray } from '../utils';
 import { useVideoProps } from './VideoPropsContext';
@@ -66,17 +66,8 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
     [props.subtitles, defaultQualities]
   );
 
-  const [state, setState] = React.useState<VideoState>({
-    ...defaultVideoState,
-    ...defaultState,
-  });
-
-  useEffect(() => {
+  const getState = useCallback(() => {
     const rawSettings = localStorage.getItem(LOCALSTORAGE_KEY);
-
-    if (!rawSettings) return;
-
-    const settings: Partial<VideoState> = JSON.parse(rawSettings);
 
     const newState = {
       ...defaultVideoState,
@@ -84,11 +75,17 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
       ...props?.defaultVideoState,
     };
 
-    const langAudios = state.audios.filter((a) => a?.lang).map((a) => a.lang);
-    const langSubtitles = state.subtitles
+    if (!rawSettings) return newState;
+
+    const settings: Partial<VideoState> = JSON.parse(rawSettings);
+
+    const langAudios = newState.audios
+      .filter((a) => a?.lang)
+      .map((a) => a.lang);
+    const langSubtitles = newState.subtitles
       .filter((a) => a?.lang)
       .map((s) => s.lang);
-    const langQualities = state.qualities;
+    const langQualities = newState.qualities;
 
     const filteredSettings = {
       currentAudio: isInArray(settings?.currentAudio, langAudios)
@@ -102,12 +99,16 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
         : newState.currentSubtitle,
     };
 
-    setState({
-      ...newState,
-      ...filteredSettings,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [defaultState]);
+    return { ...newState, ...filteredSettings };
+  }, [defaultState, props?.defaultVideoState]);
+
+  const [state, setState] = React.useState<VideoState>(getState);
+
+  useEffect(() => {
+    const state = getState();
+
+    setState(state);
+  }, [defaultState, getState]);
 
   useEffect(() => {
     const {
