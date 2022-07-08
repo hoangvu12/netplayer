@@ -9,14 +9,7 @@ const initialCode = `
     sources={[
       {
         file:
-          'https://www.googleapis.com/drive/v3/files/1Q6LsjpWgPoYIs6GaD8G6lNZRM2-VJXAY?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
-        label: '1080p',
-      },
-      {
-        file:
-          'https://www.googleapis.com/drive/v3/files/1sKXS6VU8uUGeW8WPKDp2dXxwAJ96Tk9c?alt=media&key=AIzaSyCFwU3MAtwS2TgPPEObV-hDXexH83ae1Fs',
-        label: '720p',
-      },
+          'https://play.vnupload.net/SB/up/q2v27484r214x2z2w2z2/r4q2a454v234v2u2s2v264t2y2/u27424h54494x203w2a4j5s294f41474v2x2b403t2a4t223z2l5i5x2v294a45484f584v2z284l5h5/573387355440192.m3u8'      }
     ]}
     subtitles={[
       {
@@ -31,6 +24,30 @@ const initialCode = `
       }
     ]}
     className="object-contain w-full h-full"
+    changeSourceUrl={(url, source) => {
+      const encodedUrl = encodeURIComponent(url)
+
+      const requestUrl =
+        'http://localhost:3002/proxy?url=' +
+        encodedUrl +
+        '&appendReqHeaders=[["referer", "https://play.vnupload.net/"]]&ignoreReqHeaders=true'
+    
+      return requestUrl
+    }}
+    onHlsInit={(hls) => {
+      hls.on("hlsFragLoading", (_, { frag }) => {
+        const href = new URL(frag.baseurl);
+        const targetUrl = href.searchParams.get("url");
+
+        const url = buildAbsoluteURL(targetUrl, frag.relurl, {
+          alwaysNormalize: true,
+        });
+
+        href.searchParams.set("url", url);
+
+        frag.url = href.toString();
+      });
+    }}
   />
 `
 
