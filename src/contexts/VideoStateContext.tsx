@@ -1,11 +1,5 @@
 /* eslint-disable react/prop-types */
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useCallback, useContext, useEffect, useMemo } from 'react';
 import { Audio, Subtitle } from '../types';
 import { isInArray } from '../utils';
 import { useVideoProps } from './VideoPropsContext';
@@ -54,8 +48,6 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
   children,
 }) => {
   const props = useVideoProps();
-
-  const isLoadedOnce = useRef(false);
 
   const defaultQualities = useMemo(
     () =>
@@ -113,17 +105,15 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
   const [state, setState] = React.useState<VideoState>(getState);
 
   useEffect(() => {
+    console.log('getState rerender');
+
     const state = getState();
 
     setState(state);
-  }, [defaultState, getState]);
+  }, [getState]);
 
   useEffect(() => {
-    if (!isLoadedOnce.current) {
-      isLoadedOnce.current = true;
-
-      return;
-    }
+    console.log('saveState rerender');
 
     const {
       currentAudio,

@@ -24,30 +24,6 @@ const initialCode = `
       }
     ]}
     className="object-contain w-full h-full"
-    changeSourceUrl={(url, source) => {
-      const encodedUrl = encodeURIComponent(url)
-
-      const requestUrl =
-        'http://localhost:3002/proxy?url=' +
-        encodedUrl +
-        '&appendReqHeaders=[["referer", "https://play.vnupload.net/"]]&ignoreReqHeaders=true'
-    
-      return requestUrl
-    }}
-    onHlsInit={(hls) => {
-      hls.on("hlsFragLoading", (_, { frag }) => {
-        const href = new URL(frag.baseurl);
-        const targetUrl = href.searchParams.get("url");
-
-        const url = buildAbsoluteURL(targetUrl, frag.relurl, {
-          alwaysNormalize: true,
-        });
-
-        href.searchParams.set("url", url);
-
-        frag.url = href.toString();
-      });
-    }}
   />
 `
 
