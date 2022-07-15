@@ -4,11 +4,15 @@ import { Source } from '../../types';
 import { parseNumberFromString } from '../../utils';
 import styles from './Player.module.css';
 import Hls from '../../types/hls.js';
+import DashJS from '../../types/dashjs';
 import loadScript from '../../utils/load-script';
 
 const HLS_SCRIPT_URL =
   'https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js';
 const HLS_VARIABLE_NAME = 'Hls';
+const DASH_SCRIPT_URL =
+  'https://cdn.jsdelivr.net/npm/dashjs@latest/dist/dash.all.min.js';
+const DASH_VARIABLE_NAME = 'dashjs';
 
 export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
   sources: Source[];
@@ -19,6 +23,12 @@ export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
   onInit?: (videoEl: HTMLVideoElement) => void;
   autoPlay?: boolean;
 }
+
+const shouldPlayHls = (source: Source) =>
+  source.file.includes('m3u8') || source.type === 'hls';
+
+const shouldPlayDash = (source: Source) =>
+  source.file.includes('mpd') || source.type === 'dash';
 
 const noop = () => {};
 
@@ -32,13 +42,14 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       changeSourceUrl,
       onHlsInit = noop,
       onInit = noop,
-      autoPlay,
+      autoPlay = false,
       ...props
     },
     ref
   ) => {
     const innerRef = React.useRef<HTMLVideoElement>();
     const hls = React.useRef<Hls | null>(null);
+    const dashjs = React.useRef<DashJS.MediaPlayerClass | null>(null);
     const { state, setState } = useVideoState();
 
     const playerRef = React.useCallback(
@@ -181,12 +192,55 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           onHlsInit?.(_hls);
         }
 
+        async function _initDashPlayer() {
+          if (!innerRef.current) return;
+
+          if (dashjs.current !== null) {
+            dashjs.current.destroy();
+          }
+
+          const DashSDK = await loadScript<typeof DashJS>(
+            DASH_SCRIPT_URL,
+            DASH_VARIABLE_NAME
+          );
+
+          const player = DashSDK.MediaPlayer().create();
+
+          dashjs.current = player;
+
+          innerRef.current.addEventListener('loadeddata', () => {
+            const bitrates = player.getBitrateInfoListFor('video');
+
+            const qualities = bitrates.map((birate) => birate.height + 'p');
+
+            const bestQuality = bitrates[bitrates.length - 1];
+
+            player.setQualityFor('video', bestQuality.qualityIndex);
+
+            setState(() => ({
+              qualities,
+              currentQuality: bestQuality.height + 'p',
+            }));
+          });
+
+          player.updateSettings({
+            streaming: { abr: { autoSwitchBitrate: { video: false } } },
+          });
+
+          player.initialize();
+          player.setAutoPlay(autoPlay || false);
+          player.attachView(innerRef.current);
+          player.attachSource(source.file);
+        }
+
         if (!innerRef.current) return;
 
         onInit?.(innerRef.current);
 
-        if (source.file.includes('m3u8')) {
+        if (shouldPlayHls(source)) {
           _initHlsPlayer();
+        } else if (shouldPlayDash(source)) {
+          _initDashPlayer();
         } else {
           if (innerRef.current.src) {
             innerRef.current.pause();
@@ -208,7 +262,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
       // If the sources have multiple m3u8 urls, then we have to handle quality ourself (because hls.js only handle quality with playlist url).
       // Same with the sources that have multiple mp4 urls.
-      if (!sources[0].file.includes('m3u8') || sources.length > 1) {
+      if (!shouldPlayHls(sources[0]) || sources.length > 1) {
         initQuality();
       }
 
@@ -229,7 +283,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       const currentQuality = state?.currentQuality;
 
       // If the sources contain only one m3u8 url, then it maybe is a playlist.
-      if (sources[0].file.includes('m3u8') && sources.length === 1) {
+      if (shouldPlayHls(sources[0]) && sources.length === 1) {
         // Check if the playlist gave us qualities.
         if (!hls?.current?.levels?.length) return;
         if (!currentQuality) return;
@@ -238,6 +292,28 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
         hls.current.currentLevel = hls.current.levels.findIndex(
           (level) => level.height === Number(currentQuality.replace('p', ''))
         );
+
+        return;
+      }
+
+      if (shouldPlayDash(sources[0]) && sources.length === 1) {
+        if (!dashjs.current) return;
+
+        const bitrates = dashjs.current.getBitrateInfoListFor('video');
+
+        // Check if the playlist gave us qualities.
+        if (!bitrates?.length) return;
+        if (!currentQuality) return;
+
+        const choseBitrate = bitrates.find(
+          (bitrate) =>
+            bitrate.height === Number(currentQuality.replace('p', ''))
+        );
+
+        if (!choseBitrate?.qualityIndex) return;
+
+        // Handle changing quality.
+        dashjs.current.setQualityFor('video', choseBitrate.qualityIndex);
 
         return;
       }

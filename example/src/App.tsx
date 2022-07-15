@@ -9,7 +9,7 @@ const initialCode = `
     sources={[
       {
         file:
-          'https://play.vnupload.net/SB/up/q2v27484r214x2z2w2z2/r4q2a454v234v2u2s2v264t2y2/u27424h54494x203w2a4j5s294f41474v2x2b403t2a4t223z2l5i5x2v294a45484f584v2z284l5h5/573387355440192.m3u8'      }
+          'https://dash.akamaized.net/dash264/TestCasesHD/2b/qualcomm/1/MultiResMPEG2.mpd', type: 'dash'      }
     ]}
     subtitles={[
       {
@@ -24,6 +24,7 @@ const initialCode = `
       }
     ]}
     className="object-contain w-full h-full"
+    autoPlay
   />
 `
 

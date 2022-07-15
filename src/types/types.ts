@@ -1,6 +1,7 @@
 export type Source = {
   file: string;
   label?: string;
+  type?: string | 'hls' | 'dash';
 };
 
 export type Subtitle = {
