@@ -17,9 +17,11 @@ const DASH_VARIABLE_NAME = 'dashjs';
 export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
   sources: Source[];
   hlsRef?: React.MutableRefObject<Hls | null>;
+  dashRef?: React.MutableRefObject<DashJS.MediaPlayerClass | null>;
   hlsConfig?: Hls['config'];
   changeSourceUrl?: (currentSourceUrl: string, source: Source) => string;
   onHlsInit?: (hls: Hls) => void;
+  onDashInit?: (dash: DashJS.MediaPlayerClass) => void;
   onInit?: (videoEl: HTMLVideoElement) => void;
   autoPlay?: boolean;
 }
@@ -38,9 +40,11 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       sources,
       children,
       hlsRef,
+      dashRef,
       hlsConfig,
       changeSourceUrl,
       onHlsInit = noop,
+      onDashInit = noop,
       onInit = noop,
       autoPlay = false,
       ...props
@@ -208,6 +212,10 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
           dashjs.current = player;
 
+          if (dashRef) {
+            dashRef.current = player;
+          }
+
           innerRef.current.addEventListener('loadeddata', () => {
             const bitrates = player.getBitrateInfoListFor('video');
 
@@ -231,6 +239,8 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           player.setAutoPlay(autoPlay || false);
           player.attachView(innerRef.current);
           player.attachSource(source.file);
+
+          onDashInit?.(player);
         }
 
         if (!innerRef.current) return;
