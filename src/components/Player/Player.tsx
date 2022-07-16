@@ -200,7 +200,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           if (!innerRef.current) return;
 
           if (dashjs.current !== null) {
-            dashjs.current.destroy();
+            dashjs.current.reset();
           }
 
           const DashSDK = await loadScript<typeof DashJS>(
