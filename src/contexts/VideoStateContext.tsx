@@ -88,15 +88,20 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
     const langQualities = newState.qualities;
 
     const filteredSettings = {
-      currentAudio: isInArray(settings?.currentAudio, langAudios)
-        ? (settings.currentAudio as string)
-        : newState.currentAudio,
-      currentQuality: isInArray(settings?.currentQuality, langQualities)
-        ? (settings.currentQuality as string)
-        : newState.currentQuality,
-      currentSubtitle: isInArray(settings?.currentSubtitle, langSubtitles)
-        ? (settings.currentSubtitle as string)
-        : newState.currentSubtitle,
+      currentAudio:
+        isInArray(settings?.currentAudio, langAudios) || langAudios.length === 0
+          ? (settings.currentAudio as string) || null
+          : newState.currentAudio,
+      currentQuality:
+        isInArray(settings?.currentQuality, langQualities) ||
+        langQualities.length === 0
+          ? (settings.currentQuality as string) || null
+          : newState.currentQuality,
+      currentSubtitle:
+        isInArray(settings?.currentSubtitle, langSubtitles) ||
+        langSubtitles.length === 0
+          ? (settings.currentSubtitle as string) || null
+          : newState.currentSubtitle,
     };
 
     return { ...newState, ...filteredSettings };
@@ -105,16 +110,12 @@ export const VideoStateContextProvider: React.FC<VideoContextProviderProps> = ({
   const [state, setState] = React.useState<VideoState>(getState);
 
   useEffect(() => {
-    console.log('getState rerender');
-
     const state = getState();
 
     setState(state);
   }, [getState]);
 
   useEffect(() => {
-    console.log('saveState rerender');
-
     const {
       currentAudio,
       currentQuality,
