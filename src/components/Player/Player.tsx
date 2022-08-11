@@ -97,103 +97,109 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
             HLS_VARIABLE_NAME
           );
 
-          const _hls: Hls = new HlsSDK({
-            xhrSetup: (xhr, url) => {
-              const requestUrl = changeSourceUrl?.(url, source) || url;
+          if (HlsSDK.isSupported()) {
+            const _hls: Hls = new HlsSDK({
+              xhrSetup: (xhr, url) => {
+                const requestUrl = changeSourceUrl?.(url, source) || url;
 
-              xhr.open('GET', requestUrl, true);
-            },
-            ...hlsConfig,
-          });
+                xhr.open('GET', requestUrl, true);
+              },
+              ...hlsConfig,
+            });
 
-          _hls.subtitleTrack = -1;
-          _hls.subtitleDisplay = false;
+            _hls.subtitleTrack = -1;
+            _hls.subtitleDisplay = false;
 
-          if (hlsRef) {
-            hlsRef.current = _hls;
-          }
+            if (hlsRef) {
+              hlsRef.current = _hls;
+            }
 
-          hls.current = _hls;
+            hls.current = _hls;
 
-          if (innerRef.current != null) {
-            _hls.attachMedia(innerRef.current);
-          }
+            if (innerRef.current != null) {
+              _hls.attachMedia(innerRef.current);
+            }
 
-          _hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-            _hls.loadSource(source.file);
+            _hls.on(Hls.Events.MEDIA_ATTACHED, () => {
+              _hls.loadSource(source.file);
 
-            _hls.on(Hls.Events.MANIFEST_PARSED, () => {
-              if (autoPlay) {
-                innerRef?.current
-                  ?.play()
-                  .catch(() =>
-                    console.error(
-                      'User must interact before playing the video.'
-                    )
-                  );
-              }
+              _hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                if (autoPlay) {
+                  innerRef?.current
+                    ?.play()
+                    .catch(() =>
+                      console.error(
+                        'User must interact before playing the video.'
+                      )
+                    );
+                }
 
-              if (sources.length > 1) return;
-              if (!_hls.levels?.length) return;
+                if (sources.length > 1) return;
+                if (!_hls.levels?.length) return;
 
-              const levels: string[] = _hls.levels
-                .sort((a, b) => b.height - a.height)
-                .filter((level) => level.height)
-                .map((level) => `${level.height}p`);
+                const levels: string[] = _hls.levels
+                  .sort((a, b) => b.height - a.height)
+                  .filter((level) => level.height)
+                  .map((level) => `${level.height}p`);
+
+                setState(() => ({
+                  qualities: levels,
+                  currentQuality: levels[0],
+                }));
+              });
+            });
+
+            _hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_, event) => {
+              const modifiedSubtitles = event.subtitleTracks.map(
+                (track, index) => ({
+                  file: track.details?.fragments?.[0].url || track.url,
+                  lang: track.lang || index.toString(),
+                  language: track.name,
+                })
+              );
 
               setState(() => ({
-                qualities: levels,
-                currentQuality: levels[0],
+                subtitles: modifiedSubtitles,
+                currentSubtitle: modifiedSubtitles[0]?.lang,
               }));
             });
-          });
 
-          _hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, (_, event) => {
-            const modifiedSubtitles = event.subtitleTracks.map(
-              (track, index) => ({
-                file: track.details?.fragments?.[0].url || track.url,
+            _hls.on(Hls.Events.AUDIO_TRACKS_UPDATED, (_, event) => {
+              const modifiedAudios = event.audioTracks.map((track, index) => ({
                 lang: track.lang || index.toString(),
                 language: track.name,
-              })
-            );
+              }));
 
-            setState(() => ({
-              subtitles: modifiedSubtitles,
-              currentSubtitle: modifiedSubtitles[0]?.lang,
-            }));
-          });
+              setState(() => ({
+                audios: modifiedAudios,
+                currentAudio:
+                  modifiedAudios[_hls.audioTrack >= 0 ? _hls.audioTrack : 0]
+                    ?.lang,
+              }));
+            });
 
-          _hls.on(Hls.Events.AUDIO_TRACKS_UPDATED, (_, event) => {
-            const modifiedAudios = event.audioTracks.map((track, index) => ({
-              lang: track.lang || index.toString(),
-              language: track.name,
-            }));
+            _hls.on(Hls.Events.ERROR, function (event, data) {
+              console.log('ERROR:', event, data);
 
-            setState(() => ({
-              audios: modifiedAudios,
-              currentAudio:
-                modifiedAudios[_hls.audioTrack >= 0 ? _hls.audioTrack : 0]
-                  ?.lang,
-            }));
-          });
+              if (data.fatal) {
+                switch (data.type) {
+                  case Hls.ErrorTypes.NETWORK_ERROR:
+                    _hls.startLoad();
+                    break;
+                  case Hls.ErrorTypes.MEDIA_ERROR:
+                    _hls.recoverMediaError();
 
-          _hls.on(Hls.Events.ERROR, function (event, data) {
-            console.log('ERROR:', event, data);
-
-            if (data.fatal) {
-              switch (data.type) {
-                case Hls.ErrorTypes.NETWORK_ERROR:
-                  _hls.startLoad();
-                  break;
-                case Hls.ErrorTypes.MEDIA_ERROR:
-                  _hls.recoverMediaError();
-
-                  break;
+                    break;
+                }
               }
-            }
-          });
+            });
 
-          onHlsInit?.(_hls);
+            onHlsInit?.(_hls);
+          } else if (
+            innerRef.current?.canPlayType('application/vnd.apple.mpegurl')
+          ) {
+            innerRef.current.src = source.file;
+          }
         }
 
         async function _initDashPlayer() {
