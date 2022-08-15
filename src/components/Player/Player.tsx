@@ -274,11 +274,15 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
     React.useEffect(() => {
       const _hls = hls.current;
 
-      initPlayer(sources[0]);
+      const source =
+        sources.find((source) => source.label === state?.currentQuality) ||
+        sources[0];
+
+      initPlayer(source);
 
       // If the sources have multiple m3u8 urls, then we have to handle quality ourself (because hls.js only handle quality with playlist url).
       // Same with the sources that have multiple mp4 urls.
-      if (!shouldPlayHls(sources[0]) || sources.length > 1) {
+      if (!shouldPlayHls(source) || sources.length > 1) {
         initQuality();
       }
 
@@ -298,8 +302,11 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
       const currentQuality = state?.currentQuality;
 
+      const source =
+        sources.find((source) => source.label === currentQuality) || sources[0];
+
       // If the sources contain only one m3u8 url, then it maybe is a playlist.
-      if (shouldPlayHls(sources[0]) && sources.length === 1) {
+      if (shouldPlayHls(source) && sources.length === 1) {
         // Check if the playlist gave us qualities.
         if (!hls?.current?.levels?.length) return;
         if (!currentQuality) return;
@@ -312,7 +319,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
         return;
       }
 
-      if (shouldPlayDash(sources[0]) && sources.length === 1) {
+      if (shouldPlayDash(source) && sources.length === 1) {
         if (!dashjs.current) return;
 
         const bitrates = dashjs.current.getBitrateInfoListFor('video');
