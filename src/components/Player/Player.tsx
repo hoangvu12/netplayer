@@ -20,8 +20,8 @@ export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
   dashRef?: React.MutableRefObject<DashJS.MediaPlayerClass | null>;
   hlsConfig?: Hls['config'];
   changeSourceUrl?: (currentSourceUrl: string, source: Source) => string;
-  onHlsInit?: (hls: Hls) => void;
-  onDashInit?: (dash: DashJS.MediaPlayerClass) => void;
+  onHlsInit?: (hls: Hls, currentSource: Source) => void;
+  onDashInit?: (dash: DashJS.MediaPlayerClass, currentSource: Source) => void;
   onInit?: (videoEl: HTMLVideoElement) => void;
   autoPlay?: boolean;
 }
@@ -120,6 +120,8 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
               _hls.attachMedia(innerRef.current);
             }
 
+            onHlsInit?.(_hls, source);
+
             _hls.on(Hls.Events.MEDIA_ATTACHED, () => {
               _hls.loadSource(source.file);
 
@@ -193,8 +195,6 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
                 }
               }
             });
-
-            onHlsInit?.(_hls);
           } else if (
             innerRef.current?.canPlayType('application/vnd.apple.mpegurl')
           ) {
@@ -246,7 +246,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           player.attachView(innerRef.current);
           player.attachSource(source.file);
 
-          onDashInit?.(player);
+          onDashInit?.(player, source);
         }
 
         if (!innerRef.current) return;
