@@ -384,6 +384,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
         autoPlay={autoPlay}
         preload="auto"
         className={styles.video}
+        playsInline
         {...props}
       >
         {children}
