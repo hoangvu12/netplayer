@@ -77,3 +77,15 @@ export const isValidUrl = (url: string) => {
 export const isInArray = <T>(value: T, array: T[]) => {
   return array.indexOf(value) > -1;
 };
+
+export const getHeightAndWidthFromDataUrl = (dataURL: string) =>
+  new Promise<{ width: number; height: number }>((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      resolve({
+        height: img.height,
+        width: img.width,
+      });
+    };
+    img.src = dataURL;
+  });

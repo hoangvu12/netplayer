@@ -8,19 +8,19 @@ const initialCode = `
   <Player
     sources={[
       {
-        file:
-          'https://dash.akamaized.net/dash264/TestCasesHD/2b/qualcomm/1/MultiResMPEG2.mpd', type: 'dash'      }
+        file: 'https://artplayer.org/assets/sample/video.mp4'
+      }
     ]}
     subtitles={[
       {
-        "lang": "en",
-        "language": "English",
-        "file": "https://subtitles.netpop.app/subtitles/20211116/1637057950304_国王排名 2_英语.srt",
+        lang: 'jp',
+        language: 'Japanese',
+        file: 'https://artplayer.org/assets/sample/subtitle.jp.srt'
       },
       {
-        "lang": "vi",
-        "language": "Tiếng Việt",
-        "file": "https://subtitles.netpop.app/subtitles/20211116/1637057969656_国王排名 2_越南语.srt",
+        lang: 'cn',
+        language: 'Chinese',
+        file: 'https://artplayer.org/assets/sample/subtitle.cn.srt'
       }
     ]}
     className="object-contain w-full h-full"

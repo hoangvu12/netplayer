@@ -64,6 +64,7 @@ NetPlayer accepts video element props and these specific props
 | `i18n`            | [I18n](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L41)        | Translations                                                | [Default Translations](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L69) | `false`  |
 | `hotkeys`         | [Hotkey](https://github.com/hoangvu12/netplayer/blob/main/src/types/types.ts#L25)[]                    | Hotkeys (shortcuts)                                         | [Default Hotkeys](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L99)      | `false`  |
 | `components`      | [Component](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L99)[] | See [Customization](#customization)                         | [Default components](https://github.com/hoangvu12/netplayer/blob/main/src/contexts/VideoPropsContext.tsx#L46)   | `false`  |
+| `thumbnail`       | string                                                                                                 | Thumbnails on progress bar hover                            | `null`                                                                                                          | `false`  |
 
 ## Customization
 

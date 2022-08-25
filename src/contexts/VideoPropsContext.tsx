@@ -64,6 +64,7 @@ export type Components = {
 };
 
 export interface NetPlayerProps extends PlayerProps {
+  thumbnail?: string;
   i18n?: I18n;
   shortcuts?: Shortcuts;
   hotkeys?: HotKey[];

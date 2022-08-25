@@ -63,3 +63,14 @@
   margin-bottom: 0.75rem;
   transform: translateX(-50%);
 }
+
+.hoverThumbnailReference {
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 2.75rem;
+}
+
+.hoverThumbnail {
+  background-color: 'black';
+  border: 2px solid white;
+}
