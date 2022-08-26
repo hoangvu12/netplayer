@@ -86,13 +86,16 @@
   height: 3rem;
 }
 
-.settingsButton {
+.mobileTopButtons {
   position: absolute;
   right: 1rem;
   top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.settingsButton :global(.control-button) {
+.mobileTopButtons :global(.control-button) {
   width: 2rem;
   height: 2rem;
 }
