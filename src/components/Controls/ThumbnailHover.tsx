@@ -112,6 +112,7 @@ const ThumbnailHover: React.FC<ThumbnailHoverProps> = ({ hoverPercent }) => {
           className={styles.hoverThumbnail}
           ref={floatingRef}
           style={{
+            zIndex: '50',
             top: y + 'px',
             left: x + 'px',
             position: strategy,

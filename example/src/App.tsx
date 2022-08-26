@@ -24,6 +24,7 @@ const initialCode = `
       }
     ]}
     className="object-contain w-full h-full"
+    thumbnail="https://preview.zorores.com/8b/8bc17ab9537166f2abb7e0bef2b57e23/thumbnails/sprite.vtt"
     autoPlay
   />
 `
