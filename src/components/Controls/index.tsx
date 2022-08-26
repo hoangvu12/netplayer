@@ -10,6 +10,7 @@ export { default as SubtitleButton } from './SubtitleButton';
 export { default as TimeIndicator } from './TimeIndicator';
 export { default as MobileVolumeSlider } from './MobileVolumeSlider';
 export { default as ThumbnailHover } from './ThumbnailHover';
+export { default as ScreenshotButton } from './ScreenshotButton';
 
 import Controls from './Controls';
 
