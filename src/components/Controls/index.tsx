@@ -9,6 +9,7 @@ export { default as PlayPauseButton } from './PlayPauseButton';
 export { default as SubtitleButton } from './SubtitleButton';
 export { default as TimeIndicator } from './TimeIndicator';
 export { default as MobileVolumeSlider } from './MobileVolumeSlider';
+export { default as ThumbnailHover } from './ThumbnailHover';
 
 import Controls from './Controls';
 
