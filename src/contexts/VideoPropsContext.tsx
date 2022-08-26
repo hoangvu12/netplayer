@@ -90,6 +90,7 @@ const defaultI18n: I18n = {
     muteVolume: 'Mute ({{shortcut}})',
     unmuteVolume: 'Unmute ({{shortcut}})',
     sliderDragMessage: 'Drag to seek video',
+    screenshot: 'Screenshot',
   },
   settings: {
     audio: 'Audio',

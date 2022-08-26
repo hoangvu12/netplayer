@@ -52,6 +52,23 @@ export function mergeDeep(target, ...sources) {
   return mergeDeep(target, ...sources);
 }
 
+// https://stackoverflow.com/questions/6860853/generate-random-string-for-div-id
+export const randomString = (length: number) => {
+  const chars =
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghiklmnopqrstuvwxyz'.split('');
+
+  if (!length) {
+    length = Math.floor(Math.random() * chars.length);
+  }
+
+  let str = '';
+
+  for (let i = 0; i < length; i++) {
+    str += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return str;
+};
+
 export const stringInterpolate = (str: string, data: Record<string, any>) => {
   Object.entries(data).forEach(([key, value]) => {
     str = str.replace(`{{${key}}}`, value);
@@ -89,3 +106,13 @@ export const getHeightAndWidthFromDataUrl = (dataURL: string) =>
     };
     img.src = dataURL;
   });
+
+export function download(url: string, name: string) {
+  const elink = document.createElement('a');
+  elink.style.display = 'none';
+  elink.href = url;
+  elink.download = name;
+  document.body.appendChild(elink);
+  elink.click();
+  document.body.removeChild(elink);
+}
