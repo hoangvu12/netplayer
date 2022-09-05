@@ -1,12 +1,25 @@
 // https://github.com/nirsky/react-native-size-matters/blob/master/lib/scaling-utils.js
 
 import { useCallback, useEffect, useState } from 'react';
+import { PLAYER_CONTAINER_CLASS } from '../constants';
 
 const guidelineBaseWidth = 350;
 const guidelineBaseHeight = 680;
 
 const getDimension = () => {
-  const { width, height } = window.screen;
+  let width = window.screen.width;
+  let height = window.screen.height;
+
+  const containerEl = document.querySelector('.' + PLAYER_CONTAINER_CLASS);
+
+  if (containerEl) {
+    const { width: containerWidth, height: containerHeight } =
+      containerEl.getBoundingClientRect();
+
+    width = containerWidth;
+    height = containerHeight;
+  }
+
   const [shortDimension, longDimension] =
     width < height ? [width, height] : [height, width];
 
