@@ -31,13 +31,20 @@ const useTextScaling = () => {
     useState(getDimension);
 
   useEffect(() => {
+    const containerEl = document.querySelector('.' + PLAYER_CONTAINER_CLASS);
+
     const handleResize = () => {
       setDimension(getDimension());
     };
 
+    if (containerEl) {
+      containerEl.addEventListener('resize', handleResize);
+    }
+
     window.addEventListener('resize', handleResize);
 
     return () => {
+      containerEl?.removeEventListener('resize', handleResize);
       window.removeEventListener('resize', handleResize);
     };
   }, []);
