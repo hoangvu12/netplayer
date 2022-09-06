@@ -49,6 +49,12 @@ const useTextScaling = () => {
     };
   }, []);
 
+  const update = useCallback(() => {
+    const [shortDimension, longDimension] = getDimension();
+
+    setDimension([shortDimension, longDimension]);
+  }, []);
+
   const scale = useCallback(
     (size: number) => (shortDimension / guidelineBaseWidth) * size,
     [shortDimension]
@@ -72,6 +78,7 @@ const useTextScaling = () => {
     verticalScale,
     moderateScale,
     moderateVerticalScale,
+    update,
   };
 };
 
