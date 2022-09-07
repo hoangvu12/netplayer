@@ -35,6 +35,8 @@ const requestSubtitle = async (url: string): Promise<string | null> => {
 
     if (!matches?.length) return null;
 
+    if (!matches[0]) return null;
+
     const nextUrl = isValidUrl(matches[0])
       ? matches[0]
       : buildAbsoluteURL(url, matches[0]);

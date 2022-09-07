@@ -63,6 +63,7 @@ const ThumbnailHover: React.FC<ThumbnailHoverProps> = ({ hoverPercent }) => {
   const currentThumbnail = useMemo(() => {
     if (!thumbnailEntries?.length) return;
     if (!videoEl?.duration) return;
+    if (!thumbnail) return;
 
     const currentTime = (hoverPercent / 100) * videoEl.duration * 1000;
 
