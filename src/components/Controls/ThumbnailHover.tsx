@@ -44,7 +44,11 @@ const ThumbnailHover: React.FC<ThumbnailHoverProps> = ({ hoverPercent }) => {
   }, [update]);
 
   useEffect(() => {
-    if (!thumbnail) return;
+    if (!thumbnail) {
+      setThumbnailEntries([]);
+
+      return;
+    }
     if (!videoEl) return;
 
     const fetchThumbnails = async () => {
@@ -61,9 +65,9 @@ const ThumbnailHover: React.FC<ThumbnailHoverProps> = ({ hoverPercent }) => {
   }, [thumbnail, videoEl]);
 
   const currentThumbnail = useMemo(() => {
-    if (!thumbnailEntries?.length) return;
-    if (!videoEl?.duration) return;
-    if (!thumbnail) return;
+    if (!thumbnail) return undefined;
+    if (!thumbnailEntries?.length) return undefined;
+    if (!videoEl?.duration) return undefined;
 
     const currentTime = (hoverPercent / 100) * videoEl.duration * 1000;
 
