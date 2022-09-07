@@ -40,9 +40,11 @@ const Popover: React.FC<PopoverProps> = ({
       e.stopPropagation();
       e.preventDefault();
 
+      update();
+
       setIsOpen(true);
     },
-    []
+    [update]
   );
 
   const handleClose: React.MouseEventHandler<HTMLDivElement> = useCallback(
@@ -50,9 +52,11 @@ const Popover: React.FC<PopoverProps> = ({
       e.preventDefault();
       e.stopPropagation();
 
+      update();
+
       setIsOpen(false);
     },
-    []
+    [update]
   );
 
   useLayoutEffect(() => {
