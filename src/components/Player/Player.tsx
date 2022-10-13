@@ -333,7 +333,9 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
             bitrate.height === Number(currentQuality.replace('p', ''))
         );
 
-        if (!choseBitrate?.qualityIndex) return;
+        if (!choseBitrate?.qualityIndex && choseBitrate?.qualityIndex !== 0) {
+          return;
+        }
 
         // Handle changing quality.
         dashjs.current.setQualityFor('video', choseBitrate.qualityIndex);
