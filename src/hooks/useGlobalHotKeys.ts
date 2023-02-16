@@ -24,7 +24,11 @@ const useGlobalHotKeys = (videoEl: HTMLVideoElement) => {
 
       if (!matchedHotKey) return;
 
-      matchedHotKey.fn(videoEl);
+      const { fn, preventDefault = true } = matchedHotKey;
+
+      if (preventDefault) event.preventDefault();
+
+      fn(videoEl);
     };
 
     window.addEventListener('keydown', handleKeyDown);

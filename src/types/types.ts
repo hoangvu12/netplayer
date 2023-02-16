@@ -32,4 +32,5 @@ export type HotKey = {
   fn: (videoEl: HTMLVideoElement) => void;
   name: string;
   hotKey: string | string[];
+  preventDefault?: boolean;
 };
