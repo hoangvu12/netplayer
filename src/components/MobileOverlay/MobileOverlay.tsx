@@ -14,19 +14,28 @@ import TextIcon from '../TextIcon';
 import styles from './MobileOverlay.module.css';
 
 const MobileOverlay = () => {
-  const { isInteracting } = useInteract();
+  const { isInteracting, isShowingIndicator } = useInteract();
   const { i18n } = useVideoProps();
   const { videoState } = useVideo();
+
+  const shouldInactive = React.useMemo(() => {
+    return (
+      (!isInteracting && !videoState.seeking && !videoState.buffering) ||
+      isShowingIndicator
+    );
+  }, [
+    isInteracting,
+    isShowingIndicator,
+    videoState.buffering,
+    videoState.seeking,
+  ]);
 
   return (
     <div
       className={classNames(
         'mobile-overlay',
         styles.overlayContainer,
-        !isInteracting &&
-          !videoState.seeking &&
-          !videoState.buffering &&
-          styles.inactive
+        shouldInactive && styles.inactive
       )}
     >
       <TextIcon

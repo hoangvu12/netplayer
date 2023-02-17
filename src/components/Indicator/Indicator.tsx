@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { PLAYER_CONTAINER_CLASS } from '../../constants';
+import { useInteract } from '../../contexts';
 import { classNames } from '../../utils';
 import { isDesktop } from '../../utils/device';
 import Portal from '../Portal';
@@ -20,19 +21,35 @@ interface BaseIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
+const ANIMATION_TIME = 500;
+
 export const BaseIndicator = React.forwardRef<IndicatorRef, BaseIndicatorProps>(
   ({ className = '', children = '', ...props }, ref) => {
     const [show, setShow] = React.useState(false);
     const [container, setContainer] = React.useState<Element>();
     const innerRef = React.useRef<HTMLDivElement>(null);
+    const { setIsShowingIndicator } = useInteract();
+    const timeout = React.useRef<NodeJS.Timeout>();
 
     React.useImperativeHandle(ref, () => ({
       show: () => {
+        if (timeout.current) {
+          clearTimeout(timeout.current);
+        }
+
         setShow(false);
 
         setTimeout(() => {
           setShow(true);
+
+          setIsShowingIndicator(true);
         }, 0);
+
+        timeout.current = setTimeout(() => {
+          setShow(false);
+
+          setIsShowingIndicator(false);
+        }, ANIMATION_TIME);
       },
       hide: () => setShow(false),
     }));

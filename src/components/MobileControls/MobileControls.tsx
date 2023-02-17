@@ -8,17 +8,26 @@ import TimeIndicator from '../Controls/TimeIndicator';
 import styles from './MobileControls.module.css';
 
 const MobileControls = () => {
-  const { isInteracting } = useInteract();
+  const { isInteracting, isShowingIndicator } = useInteract();
   const { videoState } = useVideo();
+
+  const shouldInactive = React.useMemo(() => {
+    return (
+      (!videoState.seeking && !isInteracting && !videoState.buffering) ||
+      isShowingIndicator
+    );
+  }, [
+    isInteracting,
+    isShowingIndicator,
+    videoState.buffering,
+    videoState.seeking,
+  ]);
 
   return (
     <div
       className={classNames(
         styles.container,
-        !videoState.seeking &&
-          !isInteracting &&
-          !videoState.buffering &&
-          styles.inactive
+        shouldInactive && styles.inactive
       )}
     >
       <div className={styles.controlsContainer}>
@@ -28,6 +37,7 @@ const MobileControls = () => {
           <FullscreenButton />
         </div>
       </div>
+
       <div className={styles.sliderContainer}>
         <ProgressSlider />
       </div>
