@@ -24,6 +24,7 @@ export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
   onDashInit?: (dash: DashJS.MediaPlayerClass, currentSource: Source) => void;
   onInit?: (videoEl: HTMLVideoElement) => void;
   autoPlay?: boolean;
+  preferQuality?: (qualities: string[]) => string;
 }
 
 const shouldPlayHls = (source: Source) =>
@@ -47,6 +48,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       onDashInit = noop,
       onInit = noop,
       autoPlay = false,
+      preferQuality,
       ...props
     },
     ref
@@ -144,9 +146,11 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
                   .filter((level) => level.height)
                   .map((level) => `${level.height}p`);
 
+                const level = preferQuality?.(levels) || levels[0];
+
                 setState(() => ({
                   qualities: levels,
-                  currentQuality: levels[0],
+                  currentQuality: level,
                 }));
               });
             });
@@ -227,13 +231,26 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
             const qualities = bitrates.map((birate) => birate.height + 'p');
 
-            const bestQuality = bitrates[bitrates.length - 1];
+            const bestQuality = (() => {
+              const quality = bitrates.find((bitrate) => {
+                const quality =
+                  state.currentQuality || preferQuality?.(qualities);
+
+                if (!quality) return false;
+
+                return bitrate.height === parseNumberFromString(quality);
+              });
+
+              if (quality) return quality;
+
+              return bitrates[bitrates.length - 1];
+            })();
 
             player.setQualityFor('video', bestQuality.qualityIndex);
 
             setState(() => ({
               qualities,
-              currentQuality: bestQuality.height + 'p',
+              currentQuality: state?.currentQuality || bestQuality.height + 'p',
             }));
           });
 
@@ -312,9 +329,14 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
         if (!currentQuality) return;
 
         // Handle changing quality.
-        hls.current.currentLevel = hls.current.levels.findIndex(
-          (level) => level.height === Number(currentQuality.replace('p', ''))
+        const index = hls.current.levels.findIndex(
+          (level) =>
+            level.height === parseNumberFromString(state.currentQuality!)
         );
+
+        if (index === -1) return;
+
+        hls.current.currentLevel = index;
 
         return;
       }
@@ -330,7 +352,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
         const choseBitrate = bitrates.find(
           (bitrate) =>
-            bitrate.height === Number(currentQuality.replace('p', ''))
+            bitrate.height === parseNumberFromString(state.currentQuality!)
         );
 
         if (!choseBitrate?.qualityIndex && choseBitrate?.qualityIndex !== 0) {
