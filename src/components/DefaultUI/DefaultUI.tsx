@@ -3,12 +3,12 @@ import { useInteract } from '../../contexts/VideoInteractingContext';
 import { Components, NetPlayerProps } from '../../contexts/VideoPropsContext';
 import useDoubleTap from '../../hooks/useDoubleTap';
 import useGlobalHotKeys from '../../hooks/useGlobalHotKeys';
-import { classNames } from '../../utils';
+import { clamp, classNames } from '../../utils';
 import { isMobile } from '../../utils/device';
 import { IndicatorRef } from '../Indicator/Indicator';
 import styles from './DefaultUI.module.css';
 
-import Controls from '../Controls';
+import Controls, { MobileVolumeSlider } from '../Controls';
 import MobileBackwardIndicator from '../Indicator/MobileBackwardIndicator';
 import MobileForwardIndicator from '../Indicator/MobileForwardIndicator';
 import MobileControls from '../MobileControls';
@@ -17,6 +17,7 @@ import Overlay from '../Overlay';
 import Player from '../Player/Player';
 import Subtitle from '../Subtitle';
 import { PLAYER_CONTAINER_CLASS } from '../../constants';
+import { useVideo } from '../../contexts';
 
 const noop = () => {};
 
@@ -29,15 +30,23 @@ const defaultComponents: Components = {
   Overlay,
   Player,
   Subtitle,
+  MobileVolumeSlider,
 };
 
 const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
   ({ hlsRef = React.createRef(), components, ...props }, ref) => {
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
     const { setIsInteracting } = useInteract();
+    const { videoEl } = useVideo();
     const interactingTimeout = React.useRef<NodeJS.Timeout>();
     const backIndicatorRef = React.useRef<IndicatorRef>(null);
     const forwardIndicatorRef = React.useRef<IndicatorRef>(null);
+
+    const volumeSliderRef = React.useRef<IndicatorRef>(null);
+
+    const moveTouchYRef = React.useRef(0);
+    const touchYRef = React.useRef(0);
+    const touchDirectionRef = React.useRef<'up' | 'down' | null>(null);
 
     const resetInteractingCycle = React.useCallback(() => {
       setIsInteracting(true);
@@ -67,6 +76,9 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
         Overlay: components?.Overlay || defaultComponents.Overlay,
         Player: components?.Player || defaultComponents.Player,
         Subtitle: components?.Subtitle || defaultComponents.Subtitle,
+        MobileVolumeSlider:
+          components?.MobileVolumeSlider ||
+          defaultComponents.MobileVolumeSlider,
       }),
       [components]
     );
@@ -92,6 +104,9 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
     const handleTap: React.DOMAttributes<HTMLDivElement>['onTouchStart'] =
       React.useCallback(
         (e) => {
+          touchYRef.current = 0;
+          moveTouchYRef.current = 0;
+
           const target = e.target as HTMLDivElement;
           const videoOverlay = document.querySelector('.mobile-overlay');
 
@@ -121,6 +136,58 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
       tapThreshold: 250,
     });
 
+    const handleTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
+      const { clientX, clientY } = e.touches[0];
+
+      const widthPercent = 45;
+      const width = (window.innerWidth * widthPercent) / 100;
+
+      if (clientX > window.innerWidth - width) {
+        if (!touchYRef?.current) return;
+
+        volumeSliderRef.current?.show(false);
+
+        const sliderElement = document.querySelector('.mobile-volume-slider');
+
+        if (!sliderElement) return;
+        if (!videoEl) return;
+
+        const sliderHeight = sliderElement.clientHeight;
+
+        const draggedHeight = clientY - touchYRef.current;
+
+        const draggedVolume = Math.abs(draggedHeight / sliderHeight);
+
+        let draggedValue = 0;
+
+        if (clientY > moveTouchYRef.current) {
+          if (touchDirectionRef.current === 'up') {
+            touchYRef.current = clientY;
+          }
+
+          touchDirectionRef.current = 'down';
+
+          draggedValue = videoEl.volume - draggedVolume / 50;
+        } else {
+          if (touchDirectionRef.current === 'down') {
+            touchYRef.current = clientY;
+          }
+
+          touchDirectionRef.current = 'up';
+
+          draggedValue = videoEl.volume + draggedVolume / 50;
+        }
+
+        moveTouchYRef.current = clientY;
+
+        videoEl.volume = clamp(draggedValue, 0, 1);
+      }
+    };
+
+    const handleTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
+      touchYRef.current = e.touches[0].clientY;
+    };
+
     useGlobalHotKeys(videoRef.current!);
 
     const playerRef = React.useCallback(
@@ -139,11 +206,14 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
       <div
         onClick={!isMobile ? resetInteractingCycle : noop}
         onMouseMove={!isMobile ? resetInteractingCycle : noop}
-        onTouchStart={isMobile ? onTap : noop}
+        onTouchStart={isMobile ? handleTouchStart : noop}
+        onTouchEnd={isMobile ? onTap : noop}
+        onTouchMove={isMobile ? handleTouchMove : noop}
         className={classNames(PLAYER_CONTAINER_CLASS, styles.container)}
       >
         <uiComponents.MobileBackwardIndicator ref={backIndicatorRef} />
         <uiComponents.MobileForwardIndicator ref={forwardIndicatorRef} />
+        <uiComponents.MobileVolumeSlider ref={volumeSliderRef} />
 
         <uiComponents.Subtitle />
 

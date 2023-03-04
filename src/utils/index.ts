@@ -116,3 +116,7 @@ export function download(url: string, name: string) {
   elink.click();
   document.body.removeChild(elink);
 }
+
+export function clamp(num: number, min: number, max: number) {
+  return Math.min(Math.max(num, min), max);
+}

@@ -54,6 +54,9 @@ export type Components = {
   MobileForwardIndicator: React.ForwardRefExoticComponent<
     React.RefAttributes<IndicatorRef>
   >;
+  MobileVolumeSlider: React.ForwardRefExoticComponent<
+    React.RefAttributes<IndicatorRef>
+  >;
   Player: React.ForwardRefExoticComponent<
     PlayerProps & React.RefAttributes<HTMLVideoElement>
   >;

@@ -7,7 +7,7 @@ import Portal from '../Portal';
 import styles from './Indicator.module.css';
 
 export interface IndicatorRef {
-  show(): void;
+  show(shouldReshow?: boolean): void;
   hide(): void;
 }
 
@@ -19,12 +19,16 @@ export const createIndicator = <T,>(
 
 interface BaseIndicatorProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
+  animationTime?: number;
 }
 
 const ANIMATION_TIME = 500;
 
 export const BaseIndicator = React.forwardRef<IndicatorRef, BaseIndicatorProps>(
-  ({ className = '', children = '', ...props }, ref) => {
+  (
+    { className = '', children = '', animationTime = ANIMATION_TIME, ...props },
+    ref
+  ) => {
     const [show, setShow] = React.useState(false);
     const [container, setContainer] = React.useState<Element>();
     const innerRef = React.useRef<HTMLDivElement>(null);
@@ -32,12 +36,14 @@ export const BaseIndicator = React.forwardRef<IndicatorRef, BaseIndicatorProps>(
     const timeout = React.useRef<NodeJS.Timeout>();
 
     React.useImperativeHandle(ref, () => ({
-      show: () => {
+      show: (shouldReshow = true) => {
         if (timeout.current) {
           clearTimeout(timeout.current);
         }
 
-        setShow(false);
+        if (shouldReshow) {
+          setShow(false);
+        }
 
         setTimeout(() => {
           setShow(true);
@@ -49,7 +55,7 @@ export const BaseIndicator = React.forwardRef<IndicatorRef, BaseIndicatorProps>(
           setShow(false);
 
           setIsShowingIndicator(false);
-        }, ANIMATION_TIME);
+        }, animationTime);
       },
       hide: () => setShow(false),
     }));
