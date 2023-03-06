@@ -44,9 +44,10 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
 
     const volumeSliderRef = React.useRef<IndicatorRef>(null);
 
+    const isVolumeSliding = React.useRef(false);
     const moveTouchYRef = React.useRef(0);
     const touchYRef = React.useRef(0);
-    const touchDirectionRef = React.useRef<'up' | 'down' | null>(null);
+    const initialVolumeRef = React.useRef(0);
 
     const resetInteractingCycle = React.useCallback(() => {
       setIsInteracting(true);
@@ -107,6 +108,12 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
           touchYRef.current = 0;
           moveTouchYRef.current = 0;
 
+          if (isVolumeSliding.current) {
+            isVolumeSliding.current = false;
+
+            return;
+          }
+
           const target = e.target as HTMLDivElement;
           const videoOverlay = document.querySelector('.mobile-overlay');
 
@@ -136,57 +143,66 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
       tapThreshold: 250,
     });
 
-    const handleTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
-      const { clientX, clientY } = e.touches[0];
+    const handleTouchMove: React.TouchEventHandler<HTMLDivElement> =
+      React.useCallback(
+        (e) => {
+          const { clientX, clientY } = e.touches[0];
 
-      const widthPercent = 45;
-      const width = (window.innerWidth * widthPercent) / 100;
+          const widthPercent = 45;
+          const width = (window.innerWidth * widthPercent) / 100;
 
-      if (clientX > window.innerWidth - width) {
-        if (!touchYRef?.current) return;
+          if (clientX > window.innerWidth - width) {
+            if (!touchYRef?.current) return;
 
-        volumeSliderRef.current?.show(false);
+            volumeSliderRef.current?.show(false);
 
-        const sliderElement = document.querySelector('.mobile-volume-slider');
+            const sliderElement = document.querySelector(
+              '.mobile-volume-slider'
+            );
 
-        if (!sliderElement) return;
-        if (!videoEl) return;
+            if (!sliderElement) return;
+            if (!videoEl) return;
 
-        const sliderHeight = sliderElement.clientHeight;
+            const sliderHeight = sliderElement.clientHeight;
 
-        const draggedHeight = clientY - touchYRef.current;
+            const draggedHeight = clientY - touchYRef.current;
 
-        const draggedVolume = Math.abs(draggedHeight / sliderHeight);
+            const draggedVolume = Math.abs(draggedHeight / sliderHeight);
 
-        let draggedValue = 0;
+            let draggedValue = 0;
 
-        if (clientY > moveTouchYRef.current) {
-          if (touchDirectionRef.current === 'up') {
             touchYRef.current = clientY;
+
+            if (clientY > moveTouchYRef.current) {
+              initialVolumeRef.current =
+                initialVolumeRef.current - draggedVolume;
+
+              draggedValue = initialVolumeRef.current - draggedVolume;
+            } else {
+              initialVolumeRef.current =
+                initialVolumeRef.current + draggedVolume;
+
+              draggedValue = initialVolumeRef.current + draggedVolume;
+            }
+
+            moveTouchYRef.current = clientY;
+
+            videoEl.volume = clamp(draggedValue, 0, 1);
+
+            isVolumeSliding.current = true;
           }
+        },
+        [videoEl]
+      );
 
-          touchDirectionRef.current = 'down';
-
-          draggedValue = videoEl.volume - draggedVolume / 50;
-        } else {
-          if (touchDirectionRef.current === 'down') {
-            touchYRef.current = clientY;
-          }
-
-          touchDirectionRef.current = 'up';
-
-          draggedValue = videoEl.volume + draggedVolume / 50;
-        }
-
-        moveTouchYRef.current = clientY;
-
-        videoEl.volume = clamp(draggedValue, 0, 1);
-      }
-    };
-
-    const handleTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
-      touchYRef.current = e.touches[0].clientY;
-    };
+    const handleTouchStart: React.TouchEventHandler<HTMLDivElement> =
+      React.useCallback(
+        (e) => {
+          touchYRef.current = e.touches[0].clientY;
+          initialVolumeRef.current = videoEl?.volume ?? 1;
+        },
+        [videoEl?.volume]
+      );
 
     useGlobalHotKeys(videoRef.current!);
 
