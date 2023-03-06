@@ -1,13 +1,17 @@
 import { PLAYER_CONTAINER_CLASS } from '../constants';
 import { HotKey } from '../types';
-import { isMobile } from '../utils/device';
+import { isIOS, isMobile } from '../utils/device';
 import screenfull from '../utils/screenfull';
 
 const fullscreenHotKey = (hotKey: string | string[] = 'f'): HotKey => ({
   fn: () => {
     if (!screenfull.isEnabled) return;
 
-    const containerEl = document.querySelector('.' + PLAYER_CONTAINER_CLASS);
+    const containerElSelector = !isIOS
+      ? `.${PLAYER_CONTAINER_CLASS}`
+      : `.${PLAYER_CONTAINER_CLASS} video`;
+
+    const containerEl = document.querySelector(containerElSelector);
 
     if (!containerEl) return;
 

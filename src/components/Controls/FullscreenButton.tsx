@@ -3,7 +3,7 @@ import { PLAYER_CONTAINER_CLASS } from '../../constants';
 import { useVideoProps } from '../../contexts/VideoPropsContext';
 import useHotKey, { parseHotKey } from '../../hooks/useHotKey';
 import { stringInterpolate } from '../../utils';
-import { isMobile } from '../../utils/device';
+import { isIOS, isMobile } from '../../utils/device';
 import screenfull from '../../utils/screenfull';
 import FullscreenEnterIcon from '../icons/FullscreenEnterIcon';
 import FullscreenExitIcon from '../icons/FullscreenExitIcon';
@@ -17,7 +17,11 @@ const FullscreenButton = () => {
   const handleFullscreen = useCallback(() => {
     if (!screenfull.isEnabled) return;
 
-    const containerEl = document.querySelector(`.${PLAYER_CONTAINER_CLASS}`);
+    const containerElSelector = !isIOS
+      ? `.${PLAYER_CONTAINER_CLASS}`
+      : `.${PLAYER_CONTAINER_CLASS} video`;
+
+    const containerEl = document.querySelector(containerElSelector);
 
     if (!isFullscreen) {
       // @ts-ignore
