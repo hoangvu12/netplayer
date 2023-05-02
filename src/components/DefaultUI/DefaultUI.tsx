@@ -34,7 +34,15 @@ const defaultComponents: Components = {
 };
 
 const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
-  ({ hlsRef = React.createRef(), components, ...props }, ref) => {
+  (
+    {
+      hlsRef = React.createRef(),
+      components,
+      disableVolumeSlider = false,
+      ...props
+    },
+    ref
+  ) => {
     const videoRef = React.useRef<HTMLVideoElement | null>(null);
     const { setIsInteracting } = useInteract();
     const { videoEl } = useVideo();
@@ -153,6 +161,7 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
 
           if (clientX > window.innerWidth - width) {
             if (!touchYRef?.current) return;
+            if (disableVolumeSlider) return;
 
             volumeSliderRef.current?.show(false);
 
@@ -192,7 +201,7 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
             isVolumeSliding.current = true;
           }
         },
-        [videoEl]
+        [disableVolumeSlider, videoEl]
       );
 
     const handleTouchStart: React.TouchEventHandler<HTMLDivElement> =
@@ -229,7 +238,10 @@ const DefaultUI = React.forwardRef<HTMLVideoElement, NetPlayerProps>(
       >
         <uiComponents.MobileBackwardIndicator ref={backIndicatorRef} />
         <uiComponents.MobileForwardIndicator ref={forwardIndicatorRef} />
-        <uiComponents.MobileVolumeSlider ref={volumeSliderRef} />
+
+        {!disableVolumeSlider && (
+          <uiComponents.MobileVolumeSlider ref={volumeSliderRef} />
+        )}
 
         <uiComponents.Subtitle />
 

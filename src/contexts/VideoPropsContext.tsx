@@ -77,6 +77,7 @@ export interface NetPlayerProps extends PlayerProps {
     VideoState,
     'currentAudio' | 'currentQuality' | 'currentSubtitle' | 'isSubtitleDisabled'
   >;
+  disableVolumeSlider?: Boolean;
 }
 
 const defaultI18n: I18n = {

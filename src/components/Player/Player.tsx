@@ -218,8 +218,17 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
             dashRef.current = player;
           }
 
+          player.updateSettings({
+            streaming: {
+              buffer: { fastSwitchEnabled: true },
+              abr: { autoSwitchBitrate: { video: false } },
+            },
+          });
+
           innerRef.current.addEventListener('loadeddata', () => {
             const bitrates = player.getBitrateInfoListFor('video');
+
+            console.log(bitrates);
 
             const qualities = bitrates.map((birate) => birate.height + 'p');
 
