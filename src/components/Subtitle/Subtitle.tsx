@@ -17,6 +17,8 @@ const textStyles = {
 
 const BASE_FONT_SIZE = 16;
 const LINE_HEIHT_RATIO = 1.333;
+const PADDING_X_RATIO = 0.5;
+const PADDING_Y_RATIO = 0.25;
 
 const M3U8_SUBTITLE_REGEX = /.*\.(vtt|srt)/g;
 
@@ -108,6 +110,13 @@ const Subtitle = () => {
     return moderateScale(subtitleSettings.fontSize * BASE_FONT_SIZE);
   }, [moderateScale, subtitleSettings.fontSize]);
 
+  const padding = useMemo(() => {
+    return {
+      horizontal: fontSize * PADDING_X_RATIO,
+      vertical: fontSize * PADDING_Y_RATIO,
+    };
+  }, [fontSize]);
+
   const lineHeight = useMemo(() => {
     return fontSize * LINE_HEIHT_RATIO;
   }, [fontSize]);
@@ -125,15 +134,20 @@ const Subtitle = () => {
       <p
         className={classNames(styles.text)}
         style={{
+          paddingLeft: padding.horizontal + 'px',
+          paddingRight: padding.horizontal + 'px',
+          paddingTop: padding.vertical + 'px',
+          paddingBottom: padding.vertical + 'px',
           fontSize: fontSize + 'px',
           lineHeight: lineHeight + 'px',
           backgroundColor: `rgba(0, 0, 0, ${subtitleSettings.backgroundOpacity})`,
           color: `rgba(255, 255, 255, ${subtitleSettings.fontOpacity})`,
           textShadow: textStyles[subtitleSettings.textStyle],
         }}
-      >
-        {currentText}
-      </p>
+        dangerouslySetInnerHTML={{
+          __html: currentText,
+        }}
+      ></p>
     </div>
   );
 };
