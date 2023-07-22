@@ -7,12 +7,16 @@ import Hls from '../../types/hls.js';
 import DashJS from '../../types/dashjs';
 import loadScript from '../../utils/load-script';
 
-const HLS_SCRIPT_URL =
-  'https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js';
 const HLS_VARIABLE_NAME = 'Hls';
-const DASH_SCRIPT_URL =
-  'https://cdn.jsdelivr.net/npm/dashjs@latest/dist/dash.all.min.js';
 const DASH_VARIABLE_NAME = 'dashjs';
+
+const getHlsScriptUrl = (version = 'latest') => {
+  return `https://cdn.jsdelivr.net/npm/hls.js@${version}/dist/hls.min.js`;
+};
+
+const getDashScriptUrl = (version = 'latest') => {
+  return `https://cdn.jsdelivr.net/npm/dashjs@${version}/dist/dash.all.min.js`;
+};
 
 export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
   sources: Source[];
@@ -25,6 +29,8 @@ export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
   onInit?: (videoEl: HTMLVideoElement) => void;
   autoPlay?: boolean;
   preferQuality?: (qualities: string[]) => string;
+  hlsVersion?: string;
+  dashVersion?: string;
 }
 
 const shouldPlayHls = (source: Source) =>
@@ -49,6 +55,8 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       onInit = noop,
       autoPlay = false,
       preferQuality,
+      hlsVersion,
+      dashVersion,
       ...props
     },
     ref
@@ -57,6 +65,15 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
     const hls = React.useRef<Hls | null>(null);
     const dashjs = React.useRef<DashJS.MediaPlayerClass | null>(null);
     const { state, setState } = useVideoState();
+
+    const DASH_SCRIPT_URL = React.useMemo(
+      () => getDashScriptUrl(dashVersion),
+      [dashVersion]
+    );
+    const HLS_SCRIPT_URL = React.useMemo(
+      () => getHlsScriptUrl(hlsVersion),
+      [hlsVersion]
+    );
 
     const playerRef = React.useCallback(
       (node) => {
@@ -227,8 +244,6 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
 
           innerRef.current.addEventListener('loadeddata', () => {
             const bitrates = player.getBitrateInfoListFor('video');
-
-            console.log(bitrates);
 
             const qualities = bitrates.map((birate) => birate.height + 'p');
 
