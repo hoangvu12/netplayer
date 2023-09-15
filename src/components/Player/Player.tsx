@@ -14,8 +14,16 @@ const getHlsScriptUrl = (version = 'latest') => {
   return `https://cdn.jsdelivr.net/npm/hls.js@${version}/dist/hls.min.js`;
 };
 
+const getAltHlsScriptUrl = (version = '1.4.10') => {
+  return `https://cdnjs.cloudflare.com/ajax/libs/hls.js/${version}/hls.min.js`;
+};
+
 const getDashScriptUrl = (version = 'latest') => {
   return `https://cdn.jsdelivr.net/npm/dashjs@${version}/dist/dash.all.min.js`;
+};
+
+const getAltDashScriptUrl = (version = '4.7.1') => {
+  return `https://cdnjs.cloudflare.com/ajax/libs/dashjs/${version}/dash.all.min.js`;
 };
 
 export interface PlayerProps extends React.HTMLAttributes<HTMLVideoElement> {
@@ -66,14 +74,13 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
     const dashjs = React.useRef<DashJS.MediaPlayerClass | null>(null);
     const { state, setState } = useVideoState();
 
-    const DASH_SCRIPT_URL = React.useMemo(
-      () => getDashScriptUrl(dashVersion),
-      [dashVersion]
-    );
-    const HLS_SCRIPT_URL = React.useMemo(
-      () => getHlsScriptUrl(hlsVersion),
-      [hlsVersion]
-    );
+    const DASH_SCRIPT_URLS = React.useMemo(() => {
+      return [getDashScriptUrl(dashVersion), getAltDashScriptUrl(dashVersion)];
+    }, [dashVersion]);
+
+    const HLS_SCRIPT_URLS = React.useMemo(() => {
+      return [getHlsScriptUrl(hlsVersion), getAltHlsScriptUrl(hlsVersion)];
+    }, [hlsVersion]);
 
     const playerRef = React.useCallback(
       (node) => {
@@ -108,7 +115,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
       async (source: Source) => {
         async function _initHlsPlayer() {
           const HlsSDK = await loadScript<typeof Hls>(
-            HLS_SCRIPT_URL,
+            HLS_SCRIPT_URLS,
             HLS_VARIABLE_NAME
           );
 
@@ -223,7 +230,7 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
           if (!innerRef.current) return;
 
           const DashSDK = await loadScript<typeof DashJS>(
-            DASH_SCRIPT_URL,
+            DASH_SCRIPT_URLS,
             DASH_VARIABLE_NAME
           );
 

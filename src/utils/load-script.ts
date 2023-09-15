@@ -52,4 +52,32 @@ function loadScript<T>(
   });
 }
 
-export default loadScript;
+function loadBackupScript<T>(
+  src: HTMLScriptElement['src'][],
+  variableName: string,
+  options: Options = {}
+): Promise<T> {
+  return new Promise((resolve, reject) => {
+    let index = 0;
+
+    const loadNextScript = () => {
+      if (index >= src.length) {
+        reject(new Error('Failed to load script from all URLs'));
+        return;
+      }
+
+      const currentSrc = src[index];
+
+      loadScript<T>(currentSrc, variableName, options)
+        .then(resolve)
+        .catch(() => {
+          index++;
+          loadNextScript();
+        });
+    };
+
+    loadNextScript();
+  });
+}
+
+export default loadBackupScript;
