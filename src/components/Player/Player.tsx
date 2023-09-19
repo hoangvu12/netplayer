@@ -167,6 +167,11 @@ const Player = React.forwardRef<HTMLVideoElement, PlayerProps>(
                   .map((level) => `${level.height}p`);
 
                 const level = preferQuality?.(levels) || levels[0];
+                const levelIndex = _hls.levels.findIndex(
+                  (hlsLevel) => hlsLevel.height === parseNumberFromString(level)
+                );
+
+                _hls.currentLevel = levelIndex;
 
                 setState(() => ({
                   qualities: levels,
